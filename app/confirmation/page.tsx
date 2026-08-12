@@ -1,10 +1,10 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { CONFIRMATION_AUTO_REDIRECT_SECONDS } from '@/lib/constants';
 
-export default function ConfirmationPage() {
+function ConfirmationContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const orderNumber = searchParams.get('order') || 'DESCONHECIDO';
@@ -71,5 +71,13 @@ export default function ConfirmationPage() {
         </p>
       </div>
     </main>
+  );
+}
+
+export default function ConfirmationPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-slate-950" />}>
+      <ConfirmationContent />
+    </Suspense>
   );
 }

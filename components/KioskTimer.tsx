@@ -6,7 +6,7 @@ import { KIOSK_TIMEOUT_MINUTES } from '@/lib/constants';
 
 export function KioskTimer() {
   const router = useRouter();
-  const timeoutRef = useRef<NodeJS.Timeout>();
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const [isVisible, setIsVisible] = useState(false);
   const [countdown, setCountdown] = useState(0);
 
