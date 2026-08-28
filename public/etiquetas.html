@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Etiquetas de Manipulação</title>
+<style>
+  :root {
+    --ink: #1c1c1c;
+    --paper: #fafaf8;
+    --line: #d8d5cc;
+    --accent: #b3401f;
+    --accent-soft: #f2e2da;
+    --ok: #3a6b4c;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    background: #eeece5;
+    color: var(--ink);
+  }
+
+  /* ---------- TELA (não imprime) ---------- */
+  .app {
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 32px 20px 80px;
+  }
+
+  header.app-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    border-bottom: 3px solid var(--ink);
+    padding-bottom: 12px;
+  }
+
+  header.app-header h1 {
+    font-size: 22px;
+    letter-spacing: 0.02em;
+    margin: 0;
+    text-transform: uppercase;
+  }
+
+  header.app-header span {
+    font-size: 12px;
+    color: #706c62;
+  }
+
+  .panel {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    padding: 24px;
+    margin-bottom: 20px;
+  }
+
+  .panel h2 {
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin: 0 0 16px;
+    color: #706c62;
+  }
+
+  .field {
+    margin-bottom: 16px;
+  }
+
+  .field label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+
+  .field select,
+  .field input {
+    width: 100%;
+    padding: 10px 12px;
+    font-size: 15px;
+    border: 1.5px solid var(--line);
+    background: #fff;
+    color: var(--ink);
+    font-family: inherit;
+  }
+
+  .field select:focus,
+  .field input:focus {
+    outline: none;
+    border-color: var(--accent);
+  }
+
+  .row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  .combo {
+    position: relative;
+  }
+
+  .toggle-group {
+    display: flex;
+    gap: 8px;
+  }
+
+  .toggle-btn {
+    flex: 1;
+    padding: 10px 12px;
+    font-size: 14px;
+    font-weight: 700;
+    border: 1.5px solid var(--line);
+    background: #fff;
+    color: var(--ink);
+    cursor: pointer;
+    font-family: inherit;
+  }
+
+  .toggle-btn.active {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: #fff;
+  }
+
+  .aviso-nao-recomendado {
+    margin-top: 10px;
+    padding: 10px 12px;
+    background: #fbeaea;
+    border: 1px solid #c0392b;
+    color: #8b241a;
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  .combo-list {
+    display: none;
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    right: 0;
+    max-height: 320px;
+    overflow-y: auto;
+    background: #fff;
+    border: 1.5px solid var(--ink);
+    z-index: 20;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+  }
+
+  .combo-list.open { display: block; }
+
+  .combo-group-label {
+    padding: 8px 12px 4px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #8a8577;
+    background: #f4f2ec;
+    position: sticky;
+    top: 0;
+  }
+
+  .combo-item {
+    padding: 9px 12px;
+    font-size: 14px;
+    cursor: pointer;
+  }
+
+  .combo-item:hover,
+  .combo-item.active {
+    background: var(--accent-soft);
+  }
+
+  .combo-item .dias-tag {
+    color: #8a8577;
+    font-size: 12px;
+    margin-left: 6px;
+  }
+
+  .combo-empty {
+    padding: 12px;
+    font-size: 13px;
+    color: #8a8577;
+  }
+
+  .combo-outro {
+    border-top: 1px solid var(--line);
+    font-weight: 700;
+  }
+
+  .validade-preview {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--accent-soft);
+    border: 1px solid var(--accent);
+    padding: 8px 14px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--accent);
+  }
+
+  .btn-print {
+    display: block;
+    width: 100%;
+    padding: 16px;
+    font-size: 16px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    background: var(--ink);
+    color: #fff;
+    border: none;
+    cursor: pointer;
+  }
+
+  .btn-print:hover { background: var(--accent); }
+
+  .btn-print:disabled {
+    background: #b7b3a8;
+    cursor: not-allowed;
+  }
+
+  .hint {
+    font-size: 12px;
+    color: #8a8577;
+    margin-top: -8px;
+    margin-bottom: 16px;
+  }
+
+  .edit-list-note {
+    font-size: 12px;
+    color: #8a8577;
+    border-top: 1px dashed var(--line);
+    margin-top: 20px;
+    padding-top: 12px;
+  }
+
+  /* ---------- PREVIEW das etiquetas na tela ---------- */
+  .preview-wrap {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-top: 8px;
+  }
+
+  .label {
+    width: 300px;
+    height: 235px;
+    background: #fff;
+    border: 1px solid #999;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .label .campos {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    height: 100%;
+    justify-content: center;
+  }
+
+  .label .campo {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    font-size: 14px;
+    border-bottom: 1px solid #c9c5b9;
+    padding-bottom: 3px;
+  }
+
+  .label .campo .rotulo {
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+    font-size: 13px;
+  }
+
+  .label .campo .valor {
+    font-size: 15px;
+    font-weight: 600;
+    flex: 1;
+  }
+
+  .label .campo.produto .rotulo,
+  .label .campo.produto .valor {
+    font-size: 18px;
+    font-weight: 800;
+  }
+
+  .label .campo.validade .valor {
+    color: var(--accent);
+    font-weight: 800;
+  }
+
+  /* ---------- IMPRESSÃO ---------- */
+  @media print {
+    body { background: #fff; }
+    .no-print { display: none !important; }
+
+    .preview-wrap {
+      display: block;
+      gap: 0;
+      margin: 0;
+    }
+
+    .label {
+      width: 100mm;
+      height: 70mm;
+      border: none;
+      box-shadow: none;
+      padding: 6mm 7mm;
+      page-break-after: always;
+    }
+
+    .label .campos { gap: 3mm; }
+    .label .campo { font-size: 15px; padding-bottom: 3px; }
+    .label .campo .rotulo { font-size: 14px; }
+    .label .campo .valor { font-size: 16px; }
+    .label .campo.produto .rotulo,
+    .label .campo.produto .valor { font-size: 19px; }
+    .label .campo.validade .valor {
+      color: var(--ink);
+      font-weight: 900;
+      text-decoration: underline;
+    }
+  }
+
+  @page {
+    size: 100mm 70mm;
+    margin: 0;
+  }
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <header class="app-header no-print">
+    <h1>Etiquetas de Manipulação</h1>
+    <span>Etiqueta 100 × 70mm · Zebra USB</span>
+  </header>
+
+  <div class="panel no-print">
+    <h2>1. Produto</h2>
+    <div class="field">
+      <label for="produto-search">Buscar produto</label>
+      <div class="combo">
+        <input type="text" id="produto-search" placeholder="Digite pra buscar (ex: frango, molho, congelado...)" autocomplete="off">
+        <div class="combo-list" id="combo-list"></div>
+      </div>
+    </div>
+
+    <div class="field" id="conservacao-produto-wrap" style="display:none;">
+      <label>Conservação</label>
+      <div class="toggle-group">
+        <button type="button" class="toggle-btn active" data-valor="refrigerado">Refrigerado</button>
+        <button type="button" class="toggle-btn" data-valor="congelado">Congelado</button>
+      </div>
+      <div id="congelado-sem-prazo" style="display:none;">
+        <div class="field" style="margin-top:10px;">
+          <label for="dias-congelado-manual">Esse item ainda não tem prazo de congelado cadastrado — quantos dias?</label>
+          <input type="number" id="dias-congelado-manual" min="0" placeholder="Ex: 90">
+        </div>
+      </div>
+      <div id="congelado-nao-recomendado" class="aviso-nao-recomendado" style="display:none;"></div>
+    </div>
+
+    <div id="campos-manual" style="display:none;">
+      <div class="row">
+        <div class="field">
+          <label for="produto-manual">Nome do produto</label>
+          <input type="text" id="produto-manual" placeholder="Ex: Rúcula higienizada">
+        </div>
+        <div class="field">
+          <label for="dias-manual">Validade (dias)</label>
+          <input type="number" id="dias-manual" min="0" placeholder="Ex: 3">
+        </div>
+      </div>
+      <div class="field">
+        <label for="conservacao-manual">Conservação</label>
+        <select id="conservacao-manual">
+          <option value="refrigerado">Refrigerado (≤4°C)</option>
+          <option value="congelado">Congelado (≤-18°C)</option>
+        </select>
+      </div>
+    </div>
+
+    <h2>2. Data e quantidade</h2>
+    <div class="row">
+      <div class="field">
+        <label for="data-manipulacao">Data de manipulação</label>
+        <input type="date" id="data-manipulacao">
+      </div>
+      <div class="field">
+        <label for="quantidade">Quantidade de etiquetas</label>
+        <input type="number" id="quantidade" min="1" value="1">
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="field">
+        <label for="lote">Lote</label>
+        <input type="text" id="lote" placeholder="Ex: 0827-A">
+      </div>
+      <div class="field">
+        <label for="responsavel">Responsável</label>
+        <input type="text" id="responsavel" placeholder="Nome de quem manipulou">
+      </div>
+    </div>
+
+    <div class="validade-preview" id="validade-preview">Validade: —</div>
+
+    <p class="edit-list-note">
+      Quer mudar os produtos da lista ou o prazo de validade de cada um? Abra este arquivo em um editor de texto
+      e edite o array <code>PRODUTOS</code> no início do &lt;script&gt;, no final da página.
+    </p>
+  </div>
+
+  <div class="panel no-print">
+    <h2>3. Pré-visualização</h2>
+    <button class="btn-print" id="btn-imprimir">Imprimir etiquetas</button>
+  </div>
+
+  <div class="preview-wrap" id="preview-wrap"></div>
+
+</div>
+
+<script>
+  // ======== LISTA DE PRODUTOS E VALIDADES (em dias) — editável aqui ========
+  const PRODUTOS = [
+    // Carnes Cruas
+    { categoria: "Carnes Cruas", nome: "Carne bovina porcionada", diasRefrigerado: 3, diasCongelado: 90 },
+    { categoria: "Carnes Cruas", nome: "Bife bovino", diasRefrigerado: 3, diasCongelado: 90 },
+    { categoria: "Carnes Cruas", nome: "Iscas bovinas", diasRefrigerado: 2, diasCongelado: 90 },
+    { categoria: "Carnes Cruas", nome: "Carne moída bovina", diasRefrigerado: 1, diasCongelado: 90 },
+    { categoria: "Carnes Cruas", nome: "Hambúrguer artesanal cru", diasRefrigerado: 1, diasCongelado: 90 },
+    { categoria: "Carnes Cruas", nome: "Carne suína porcionada", diasRefrigerado: 3, diasCongelado: 90 },
+    { categoria: "Carnes Cruas", nome: "Lombo suíno", diasRefrigerado: 3, diasCongelado: 90 },
+    { categoria: "Carnes Cruas", nome: "Pernil suíno", diasRefrigerado: 3, diasCongelado: 90 },
+    { categoria: "Carnes Cruas", nome: "Costela suína crua", diasRefrigerado: 3, diasCongelado: 90 },
+    { categoria: "Carnes Cruas", nome: "Frango inteiro cru", diasRefrigerado: 2, diasCongelado: 90 },
+    { categoria: "Carnes Cruas", nome: "Peito de frango cru", diasRefrigerado: 2, diasCongelado: 90 },
+    { categoria: "Carnes Cruas", nome: "Filé de frango cru", diasRefrigerado: 2, diasCongelado: 90 },
+    { categoria: "Carnes Cruas", nome: "Coxa de frango", diasRefrigerado: 2, diasCongelado: 90 },
+    { categoria: "Carnes Cruas", nome: "Sobrecoxa de frango", diasRefrigerado: 2, diasCongelado: 90 },
+    { categoria: "Carnes Cruas", nome: "Frango temperado", diasRefrigerado: 2, diasCongelado: 90 },
+    { categoria: "Carnes Cruas", nome: "Frango moído", diasRefrigerado: 1, diasCongelado: 90 },
+
+    // Pescados e Frutos do Mar
+    { categoria: "Pescados e Frutos do Mar", nome: "Peixe inteiro limpo", diasRefrigerado: 1, diasCongelado: 60 },
+    { categoria: "Pescados e Frutos do Mar", nome: "Filé de peixe", diasRefrigerado: 1, diasCongelado: 60 },
+    { categoria: "Pescados e Frutos do Mar", nome: "Salmão", diasRefrigerado: 1, diasCongelado: 90 },
+    { categoria: "Pescados e Frutos do Mar", nome: "Atum fresco", diasRefrigerado: 1, diasCongelado: 90 },
+    { categoria: "Pescados e Frutos do Mar", nome: "Camarão cru", diasRefrigerado: 1, diasCongelado: 60 },
+    { categoria: "Pescados e Frutos do Mar", nome: "Lula crua", diasRefrigerado: 1, diasCongelado: 90 },
+    { categoria: "Pescados e Frutos do Mar", nome: "Polvo cru", diasRefrigerado: 1, diasCongelado: 90 },
+    { categoria: "Pescados e Frutos do Mar", nome: "Mexilhão", diasRefrigerado: 1, diasCongelado: 90 },
+    { categoria: "Pescados e Frutos do Mar", nome: "Frutos do mar mistos", diasRefrigerado: 1, diasCongelado: 90 },
+
+    // Carnes e Proteínas Cozidas
+    { categoria: "Carnes e Proteínas Cozidas", nome: "Carne bovina cozida", diasRefrigerado: 5, diasCongelado: 90 },
+    { categoria: "Carnes e Proteínas Cozidas", nome: "Carne bovina desfiada", diasRefrigerado: 5, diasCongelado: 90 },
+    { categoria: "Carnes e Proteínas Cozidas", nome: "Carne de panela", diasRefrigerado: 5, diasCongelado: 60 },
+    { categoria: "Carnes e Proteínas Cozidas", nome: "Carne assada", diasRefrigerado: 5, diasCongelado: 60 },
+    { categoria: "Carnes e Proteínas Cozidas", nome: "Carne seca cozida", diasRefrigerado: 5, diasCongelado: 60 },
+    { categoria: "Carnes e Proteínas Cozidas", nome: "Frango cozido", diasRefrigerado: 5, diasCongelado: 90 },
+    { categoria: "Carnes e Proteínas Cozidas", nome: "Frango desfiado", diasRefrigerado: 5, diasCongelado: 90 },
+    { categoria: "Carnes e Proteínas Cozidas", nome: "Frango assado", diasRefrigerado: 5, diasCongelado: 60 },
+    { categoria: "Carnes e Proteínas Cozidas", nome: "Pernil assado", diasRefrigerado: 5, diasCongelado: 60 },
+    { categoria: "Carnes e Proteínas Cozidas", nome: "Costela cozida", diasRefrigerado: 5, diasCongelado: 60 },
+    { categoria: "Carnes e Proteínas Cozidas", nome: "Bacon frito", diasRefrigerado: 5, diasCongelado: 60 },
+
+    // Arroz, Feijão e Guarnições
+    { categoria: "Arroz, Feijão e Guarnições", nome: "Arroz branco cozido", diasRefrigerado: 5, diasCongelado: 30 },
+    { categoria: "Arroz, Feijão e Guarnições", nome: "Arroz integral cozido", diasRefrigerado: 5, diasCongelado: 30 },
+    { categoria: "Arroz, Feijão e Guarnições", nome: "Arroz temperado", diasRefrigerado: 5, diasCongelado: 30 },
+    { categoria: "Arroz, Feijão e Guarnições", nome: "Arroz de alho", diasRefrigerado: 5, diasCongelado: 30 },
+    { categoria: "Arroz, Feijão e Guarnições", nome: "Feijão cozido", diasRefrigerado: 5, diasCongelado: 90 },
+    { categoria: "Arroz, Feijão e Guarnições", nome: "Feijão temperado", diasRefrigerado: 5, diasCongelado: 60 },
+    { categoria: "Arroz, Feijão e Guarnições", nome: "Feijão preto", diasRefrigerado: 5, diasCongelado: 60 },
+    { categoria: "Arroz, Feijão e Guarnições", nome: "Lentilha cozida", diasRefrigerado: 5, diasCongelado: 60 },
+    { categoria: "Arroz, Feijão e Guarnições", nome: "Grão-de-bico cozido", diasRefrigerado: 5, diasCongelado: 60 },
+    { categoria: "Arroz, Feijão e Guarnições", nome: "Purê de batata", diasRefrigerado: 3, diasCongelado: 30 },
+    { categoria: "Arroz, Feijão e Guarnições", nome: "Purê de macaxeira", diasRefrigerado: 3, diasCongelado: 30 },
+    { categoria: "Arroz, Feijão e Guarnições", nome: "Purê de abóbora", diasRefrigerado: 3, diasCongelado: 30 },
+    { categoria: "Arroz, Feijão e Guarnições", nome: "Legumes cozidos", diasRefrigerado: 3, diasCongelado: 30 },
+
+    // Molhos e Bases
+    { categoria: "Molhos e Bases", nome: "Molho de tomate", diasRefrigerado: 5, diasCongelado: 90 },
+    { categoria: "Molhos e Bases", nome: "Molho de pizza", diasRefrigerado: 5, diasCongelado: 30 },
+    { categoria: "Molhos e Bases", nome: "Molho de carne", diasRefrigerado: 5, diasCongelado: 90 },
+    { categoria: "Molhos e Bases", nome: "Molho madeira", diasRefrigerado: 5, diasCongelado: 30 },
+    { categoria: "Molhos e Bases", nome: "Demi-glace", diasRefrigerado: 5, diasCongelado: 30 },
+    { categoria: "Molhos e Bases", nome: "Caldo de carne", diasRefrigerado: 5, diasCongelado: 90 },
+    { categoria: "Molhos e Bases", nome: "Caldo de frango", diasRefrigerado: 5, diasCongelado: 90 },
+    { categoria: "Molhos e Bases", nome: "Caldo de legumes", diasRefrigerado: 5, diasCongelado: 90 },
+    { categoria: "Molhos e Bases", nome: "Fundo de carne", diasRefrigerado: 5, diasCongelado: 90 },
+    { categoria: "Molhos e Bases", nome: "Fundo de frango", diasRefrigerado: 5, diasCongelado: 90 },
+    { categoria: "Molhos e Bases", nome: "Molho branco", diasRefrigerado: 3, diasCongelado: 30 },
+    { categoria: "Molhos e Bases", nome: "Molho de queijo", diasRefrigerado: 3, diasCongelado: 30 },
+    { categoria: "Molhos e Bases", nome: "Molho de camarão", diasRefrigerado: 2, diasCongelado: 30 },
+    { categoria: "Molhos e Bases", nome: "Molho de peixe", diasRefrigerado: 2, diasCongelado: 30 },
+    { categoria: "Molhos e Bases", nome: "Molho de alho", diasRefrigerado: 3, diasCongelado: 30 },
+    { categoria: "Molhos e Bases", nome: "Molho rosé", diasRefrigerado: 3, diasCongelado: 30 },
+    { categoria: "Molhos e Bases", nome: "Molho de mostarda", diasRefrigerado: 5, diasCongelado: 30 },
+    { categoria: "Molhos e Bases", nome: "Vinagrete", diasRefrigerado: 3, naoRecomendadoCongelar: true, motivoNaoCongelar: "a emulsão separa e perde a textura ao descongelar" },
+    { categoria: "Molhos e Bases", nome: "Maionese caseira", diasRefrigerado: 2, naoRecomendadoCongelar: true, motivoNaoCongelar: "a emulsão separa e perde a textura ao descongelar" },
+    { categoria: "Molhos e Bases", nome: "Molho à base de maionese", diasRefrigerado: 2, naoRecomendadoCongelar: true, motivoNaoCongelar: "a emulsão separa e perde a textura ao descongelar" },
+
+    // Queijos Fracionados e Ralados
+    { categoria: "Queijos Fracionados e Ralados", nome: "Muçarela ralada", diasRefrigerado: 5, diasCongelado: 60 },
+    { categoria: "Queijos Fracionados e Ralados", nome: "Muçarela fatiada", diasRefrigerado: 5, diasCongelado: 30 },
+    { categoria: "Queijos Fracionados e Ralados", nome: "Parmesão ralado", diasRefrigerado: 5, diasCongelado: 60 },
+    { categoria: "Queijos Fracionados e Ralados", nome: "Provolone ralado", diasRefrigerado: 5, diasCongelado: 60 },
+    { categoria: "Queijos Fracionados e Ralados", nome: "Queijo prato fatiado", diasRefrigerado: 5, diasCongelado: 30 },
+    { categoria: "Queijos Fracionados e Ralados", nome: "Gorgonzola fracionado", diasRefrigerado: 5, diasCongelado: 30 },
+    { categoria: "Queijos Fracionados e Ralados", nome: "Brie fracionado", diasRefrigerado: 5, diasCongelado: 30 },
+    { categoria: "Queijos Fracionados e Ralados", nome: "Queijo coalho fracionado", diasRefrigerado: 5, diasCongelado: 30 },
+    { categoria: "Queijos Fracionados e Ralados", nome: "Mix de queijos ralados", diasRefrigerado: 5, diasCongelado: 60 },
+
+    // Frios e Embutidos
+    { categoria: "Frios e Embutidos", nome: "Presunto fatiado", diasRefrigerado: 5, diasCongelado: 30 },
+    { categoria: "Frios e Embutidos", nome: "Peito de peru fatiado", diasRefrigerado: 5, diasCongelado: 30 },
+    { categoria: "Frios e Embutidos", nome: "Mortadela fatiada", diasRefrigerado: 5, diasCongelado: 30 },
+    { categoria: "Frios e Embutidos", nome: "Salame fatiado", diasRefrigerado: 5, diasCongelado: 30 },
+    { categoria: "Frios e Embutidos", nome: "Calabresa fatiada", diasRefrigerado: 5, diasCongelado: 30 },
+    { categoria: "Frios e Embutidos", nome: "Linguiça aberta", diasRefrigerado: 5, diasCongelado: 30 },
+    { categoria: "Frios e Embutidos", nome: "Bacon aberto", diasRefrigerado: 5, diasCongelado: 30 },
+    { categoria: "Frios e Embutidos", nome: "Salsicha aberta", diasRefrigerado: 5, diasCongelado: 30 },
+
+    // Hortaliças Higienizadas e Cortadas
+    { categoria: "Hortaliças Higienizadas e Cortadas", nome: "Alface higienizada", diasRefrigerado: 3, naoRecomendadoCongelar: true, motivoNaoCongelar: "cristaliza a água e murcha completamente" },
+    { categoria: "Hortaliças Higienizadas e Cortadas", nome: "Rúcula higienizada", diasRefrigerado: 3, naoRecomendadoCongelar: true, motivoNaoCongelar: "cristaliza a água e murcha completamente" },
+    { categoria: "Hortaliças Higienizadas e Cortadas", nome: "Couve higienizada", diasRefrigerado: 3, naoRecomendadoCongelar: true, motivoNaoCongelar: "cristaliza a água e murcha completamente" },
+    { categoria: "Hortaliças Higienizadas e Cortadas", nome: "Mix de folhas", diasRefrigerado: 3, naoRecomendadoCongelar: true, motivoNaoCongelar: "cristaliza a água e murcha completamente" },
+    { categoria: "Hortaliças Higienizadas e Cortadas", nome: "Cenoura ralada", diasRefrigerado: 3, diasCongelado: 30 },
+    { categoria: "Hortaliças Higienizadas e Cortadas", nome: "Cenoura cortada", diasRefrigerado: 3, diasCongelado: 90 },
+    { categoria: "Hortaliças Higienizadas e Cortadas", nome: "Beterraba ralada", diasRefrigerado: 3, diasCongelado: 30 },
+    { categoria: "Hortaliças Higienizadas e Cortadas", nome: "Repolho cortado", diasRefrigerado: 3, diasCongelado: 30 },
+    { categoria: "Hortaliças Higienizadas e Cortadas", nome: "Cebola cortada", diasRefrigerado: 3, diasCongelado: 30 },
+    { categoria: "Hortaliças Higienizadas e Cortadas", nome: "Tomate cortado", diasRefrigerado: 3, naoRecomendadoCongelar: true, motivoNaoCongelar: "cristaliza a água e murcha completamente" },
+    { categoria: "Hortaliças Higienizadas e Cortadas", nome: "Pepino cortado", diasRefrigerado: 3, naoRecomendadoCongelar: true, motivoNaoCongelar: "cristaliza a água e murcha completamente" },
+    { categoria: "Hortaliças Higienizadas e Cortadas", nome: "Pimentão cortado", diasRefrigerado: 3, diasCongelado: 30 },
+    { categoria: "Hortaliças Higienizadas e Cortadas", nome: "Abobrinha cortada", diasRefrigerado: 3, diasCongelado: 30 },
+    { categoria: "Hortaliças Higienizadas e Cortadas", nome: "Brócolis higienizado", diasRefrigerado: 3, diasCongelado: 90 },
+    { categoria: "Hortaliças Higienizadas e Cortadas", nome: "Couve-flor higienizada", diasRefrigerado: 3, diasCongelado: 90 },
+    { categoria: "Hortaliças Higienizadas e Cortadas", nome: "Batata descascada", diasRefrigerado: 2, diasCongelado: 90 },
+    { categoria: "Hortaliças Higienizadas e Cortadas", nome: "Macaxeira descascada", diasRefrigerado: 2, diasCongelado: 90 },
+
+    // Pizzeria
+    { categoria: "Pizzeria", nome: "Massa de pizza", diasRefrigerado: 3, diasCongelado: 90 },
+    { categoria: "Pizzeria", nome: "Molho de pizza", diasRefrigerado: 5, diasCongelado: 30 },
+    { categoria: "Pizzeria", nome: "Frango desfiado", diasRefrigerado: 5, diasCongelado: 90 },
+    { categoria: "Pizzeria", nome: "Carne seca cozida", diasRefrigerado: 5, diasCongelado: 60 },
+    { categoria: "Pizzeria", nome: "Carne moída preparada", diasRefrigerado: 5, diasCongelado: 60 },
+    { categoria: "Pizzeria", nome: "Calabresa fatiada", diasRefrigerado: 5, diasCongelado: 30 },
+    { categoria: "Pizzeria", nome: "Presunto fatiado", diasRefrigerado: 5, diasCongelado: 30 },
+    { categoria: "Pizzeria", nome: "Bacon fatiado", diasRefrigerado: 5, diasCongelado: 30 },
+    { categoria: "Pizzeria", nome: "Bacon frito", diasRefrigerado: 5, diasCongelado: 60 },
+    { categoria: "Pizzeria", nome: "Cebola cortada", diasRefrigerado: 3, diasCongelado: 30 },
+    { categoria: "Pizzeria", nome: "Tomate cortado", diasRefrigerado: 3, naoRecomendadoCongelar: true, motivoNaoCongelar: "perde textura ou fica borrachudo ao descongelar" },
+    { categoria: "Pizzeria", nome: "Pimentão cortado", diasRefrigerado: 3, diasCongelado: 30 },
+    { categoria: "Pizzeria", nome: "Milho aberto", diasRefrigerado: 3, diasCongelado: 30 },
+    { categoria: "Pizzeria", nome: "Ervilha aberta", diasRefrigerado: 3, diasCongelado: 30 },
+    { categoria: "Pizzeria", nome: "Palmito aberto", diasRefrigerado: 3, diasCongelado: 30 },
+    { categoria: "Pizzeria", nome: "Azeitona aberta", diasRefrigerado: 5, diasCongelado: 30 },
+    { categoria: "Pizzeria", nome: "Requeijão aberto", diasRefrigerado: 5, diasCongelado: 30 },
+    { categoria: "Pizzeria", nome: "Parmesão ralado", diasRefrigerado: 5, diasCongelado: 60 },
+    { categoria: "Pizzeria", nome: "Muçarela ralada", diasRefrigerado: 5, diasCongelado: 60 },
+    // ESTIMADOS por Claude — revisar prazo (baseado em itens parecidos da sua tabela):
+    { categoria: "Pizzeria", nome: "Cogumelos fatiados", diasRefrigerado: 3, diasCongelado: 30 },
+    { categoria: "Pizzeria", nome: "Azeitona preta fatiada", diasRefrigerado: 5, diasCongelado: 30 },
+    { categoria: "Pizzeria", nome: "Pimenta biquinho", diasRefrigerado: 5, diasCongelado: 30 },
+    { categoria: "Pizzeria", nome: "Catupiry aberto", diasRefrigerado: 5, diasCongelado: 30 },
+    { categoria: "Pizzeria", nome: "Cream cheese aberto", diasRefrigerado: 5, diasCongelado: 30 },
+    { categoria: "Pizzeria", nome: "Tomate seco", diasRefrigerado: 5, diasCongelado: 30 },
+    { categoria: "Pizzeria", nome: "Manjericão fresco", diasRefrigerado: 2, naoRecomendadoCongelar: true, motivoNaoCongelar: "perde textura ou fica borrachudo ao descongelar" },
+    { categoria: "Pizzeria", nome: "Rúcula higienizada (pizza)", diasRefrigerado: 3, naoRecomendadoCongelar: true, motivoNaoCongelar: "perde textura ou fica borrachudo ao descongelar" },
+    { categoria: "Pizzeria", nome: "Presunto parma fatiado", diasRefrigerado: 5, diasCongelado: 30 },
+    { categoria: "Pizzeria", nome: "Ovo de codorna cozido", diasRefrigerado: 3, naoRecomendadoCongelar: true, motivoNaoCongelar: "perde textura ou fica borrachudo ao descongelar" },
+
+    // Italiano (Mano Italiano) — ESTIMADOS por Claude, revisar prazos
+    { categoria: "Italiano – Mano Italiano", nome: "Massa fresca (talharim/fettuccine)", diasRefrigerado: 2, diasCongelado: 30 },
+    { categoria: "Italiano – Mano Italiano", nome: "Nhoque fresco", diasRefrigerado: 2, diasCongelado: 30 },
+    { categoria: "Italiano – Mano Italiano", nome: "Ravioli fresco", diasRefrigerado: 2, diasCongelado: 30 },
+    { categoria: "Italiano – Mano Italiano", nome: "Massa seca cozida", diasRefrigerado: 5, diasCongelado: 30 },
+    { categoria: "Italiano – Mano Italiano", nome: "Molho bolonhesa", diasRefrigerado: 5, diasCongelado: 30 },
+    { categoria: "Italiano – Mano Italiano", nome: "Molho pesto", diasRefrigerado: 3, diasCongelado: 30 },
+    { categoria: "Italiano – Mano Italiano", nome: "Molho branco (Italiano)", diasRefrigerado: 3, diasCongelado: 30 },
+    { categoria: "Italiano – Mano Italiano", nome: "Risoto preparado", diasRefrigerado: 3, diasCongelado: 30 },
+    { categoria: "Italiano – Mano Italiano", nome: "Lasanha preparada (Italiano)", diasRefrigerado: 5, diasCongelado: 30 },
+    { categoria: "Italiano – Mano Italiano", nome: "Escalope preparado", diasRefrigerado: 3, diasCongelado: 30 },
+    { categoria: "Italiano – Mano Italiano", nome: "Carpaccio preparado", diasRefrigerado: 1, diasCongelado: 30 },
+    { categoria: "Italiano – Mano Italiano", nome: "Bruschetta preparada", diasRefrigerado: 2, diasCongelado: 30 },
+    { categoria: "Italiano – Mano Italiano", nome: "Antepasto preparado", diasRefrigerado: 3, diasCongelado: 30 },
+    { categoria: "Italiano – Mano Italiano", nome: "Salame italiano fatiado", diasRefrigerado: 5, diasCongelado: 30 },
+    { categoria: "Italiano – Mano Italiano", nome: "Presunto parma fatiado (Italiano)", diasRefrigerado: 5, diasCongelado: 30 },
+    { categoria: "Italiano – Mano Italiano", nome: "Burrata fracionada", diasRefrigerado: 2, diasCongelado: 30 },
+    { categoria: "Italiano – Mano Italiano", nome: "Azeite temperado", diasRefrigerado: 5, diasCongelado: 30 },
+
+    // Sobremesas
+    { categoria: "Sobremesas", nome: "Brigadeiro", diasRefrigerado: 5, diasCongelado: 30 },
+    { categoria: "Sobremesas", nome: "Ganache", diasRefrigerado: 5, diasCongelado: 30 },
+    { categoria: "Sobremesas", nome: "Doce de leite aberto", diasRefrigerado: 5, diasCongelado: 30 },
+    { categoria: "Sobremesas", nome: "Creme de confeiteiro", diasRefrigerado: 3, diasCongelado: 30 },
+    { categoria: "Sobremesas", nome: "Creme de leite preparado", diasRefrigerado: 3, diasCongelado: 30 },
+    { categoria: "Sobremesas", nome: "Chantilly preparado", diasRefrigerado: 3, diasCongelado: 30 },
+    { categoria: "Sobremesas", nome: "Mousse", diasRefrigerado: 3, diasCongelado: 30 },
+    { categoria: "Sobremesas", nome: "Pudim", diasRefrigerado: 5, diasCongelado: 30 },
+    { categoria: "Sobremesas", nome: "Cheesecake", diasRefrigerado: 5, diasCongelado: 30 },
+    { categoria: "Sobremesas", nome: "Torta refrigerada", diasRefrigerado: 5, diasCongelado: 30 },
+    { categoria: "Sobremesas", nome: "Sobremesa com frutas", diasRefrigerado: 3, diasCongelado: 30 },
+
+    // Preparações Diversas
+    { categoria: "Preparações Diversas", nome: "Ovos cozidos com casca", diasRefrigerado: 5, naoRecomendadoCongelar: true, motivoNaoCongelar: "a água da clara se separa e a textura fica inaceitável" },
+    { categoria: "Preparações Diversas", nome: "Ovos cozidos sem casca", diasRefrigerado: 3, naoRecomendadoCongelar: true, motivoNaoCongelar: "a água da clara se separa e a textura fica inaceitável" },
+    { categoria: "Preparações Diversas", nome: "Ovos mexidos preparados", diasRefrigerado: 3, diasCongelado: 30 },
+    { categoria: "Preparações Diversas", nome: "Macarrão cozido", diasRefrigerado: 5, diasCongelado: 30 },
+    { categoria: "Preparações Diversas", nome: "Massa cozida", diasRefrigerado: 5, diasCongelado: 30 },
+    { categoria: "Preparações Diversas", nome: "Batata cozida", diasRefrigerado: 5, diasCongelado: 30 },
+    { categoria: "Preparações Diversas", nome: "Batata frita pré-preparada", diasRefrigerado: 2, diasCongelado: 30 },
+    { categoria: "Preparações Diversas", nome: "Macaxeira cozida", diasRefrigerado: 5, diasCongelado: 30 },
+    { categoria: "Preparações Diversas", nome: "Milho cozido", diasRefrigerado: 5, diasCongelado: 30 },
+    { categoria: "Preparações Diversas", nome: "Legumes branqueados", diasRefrigerado: 3, diasCongelado: 90 },
+    { categoria: "Preparações Diversas", nome: "Panqueca preparada", diasRefrigerado: 3, diasCongelado: 30 },
+    { categoria: "Preparações Diversas", nome: "Lasanha preparada", diasRefrigerado: 5, diasCongelado: 30 },
+    { categoria: "Preparações Diversas", nome: "Escondidinho preparado", diasRefrigerado: 5, diasCongelado: 30 },
+    { categoria: "Preparações Diversas", nome: "Torta salgada preparada", diasRefrigerado: 5, diasCongelado: 30 },
+    { categoria: "Preparações Diversas", nome: "Quiche preparada", diasRefrigerado: 5, diasCongelado: 30 },
+    { categoria: "Preparações Diversas", nome: "Recheio de frango", diasRefrigerado: 5, diasCongelado: 90 },
+    { categoria: "Preparações Diversas", nome: "Recheio de carne", diasRefrigerado: 5, diasCongelado: 90 },
+    { categoria: "Preparações Diversas", nome: "Recheio de queijo", diasRefrigerado: 5, diasCongelado: 90 },
+    { categoria: "Preparações Diversas", nome: "Recheio de camarão", diasRefrigerado: 2, diasCongelado: 60 },
+
+  ];
+  // ========================================================================
+
+  const $produtoSearch = document.getElementById('produto-search');
+  const $comboList = document.getElementById('combo-list');
+  const $conservacaoProdutoWrap = document.getElementById('conservacao-produto-wrap');
+  const $toggleBtns = document.querySelectorAll('.toggle-btn');
+  const $congeladoSemPrazo = document.getElementById('congelado-sem-prazo');
+  const $diasCongeladoManual = document.getElementById('dias-congelado-manual');
+  const $congeladoNaoRecomendado = document.getElementById('congelado-nao-recomendado');
+  const $camposManual = document.getElementById('campos-manual');
+  const $produtoManual = document.getElementById('produto-manual');
+  const $diasManual = document.getElementById('dias-manual');
+  const $conservacaoManual = document.getElementById('conservacao-manual');
+  const $dataManipulacao = document.getElementById('data-manipulacao');
+  const $quantidade = document.getElementById('quantidade');
+  const $lote = document.getElementById('lote');
+  const $responsavel = document.getElementById('responsavel');
+  const $validadePreview = document.getElementById('validade-preview');
+  const $previewWrap = document.getElementById('preview-wrap');
+  const $btnImprimir = document.getElementById('btn-imprimir');
+
+  const OUTRO_VALUE = '__outro__';
+  let selecionado = null; // index em PRODUTOS, ou OUTRO_VALUE, ou null (nada escolhido ainda)
+  let conservacaoProduto = 'refrigerado'; // toggle pro item do catálogo (não usado no fluxo "Outro")
+
+  function normalizar(str) {
+    return str.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  }
+
+  function renderComboList(filtro) {
+    const termo = normalizar(filtro || '');
+    $comboList.innerHTML = '';
+
+    let grupoAtual = null;
+    let algumResultado = false;
+
+    PRODUTOS.forEach((p, i) => {
+      const alvo = normalizar(`${p.nome} ${p.categoria}`);
+      if (termo && !alvo.includes(termo)) return;
+      algumResultado = true;
+
+      if (p.categoria !== grupoAtual) {
+        grupoAtual = p.categoria;
+        const label = document.createElement('div');
+        label.className = 'combo-group-label';
+        label.textContent = grupoAtual;
+        $comboList.appendChild(label);
+      }
+
+      const tag = p.diasCongelado !== undefined
+        ? `${p.diasRefrigerado}d refrig. / ${p.diasCongelado}d congel.`
+        : `${p.diasRefrigerado} dia${p.diasRefrigerado === 1 ? '' : 's'} refrig.`;
+
+      const item = document.createElement('div');
+      item.className = 'combo-item';
+      item.innerHTML = `${p.nome}<span class="dias-tag">${tag}</span>`;
+      item.addEventListener('click', () => selecionar(i));
+      $comboList.appendChild(item);
+    });
+
+    if (!algumResultado) {
+      const vazio = document.createElement('div');
+      vazio.className = 'combo-empty';
+      vazio.textContent = 'Nenhum produto encontrado nessa busca.';
+      $comboList.appendChild(vazio);
+    }
+
+    const outro = document.createElement('div');
+    outro.className = 'combo-item combo-outro';
+    outro.textContent = 'Outro (digitar manualmente)';
+    outro.addEventListener('click', () => selecionar(OUTRO_VALUE));
+    $comboList.appendChild(outro);
+  }
+
+  function abrirLista() {
+    renderComboList($produtoSearch.value);
+    $comboList.classList.add('open');
+  }
+
+  function fecharLista() {
+    $comboList.classList.remove('open');
+  }
+
+  function atualizarVisibilidadeCongeladoManual() {
+    const item = (typeof selecionado === 'number') ? PRODUTOS[selecionado] : null;
+    const ehCongelado = item && conservacaoProduto === 'congelado';
+    const naoRecomendado = ehCongelado && item.naoRecomendadoCongelar;
+    const precisaDigitar = ehCongelado && !item.naoRecomendadoCongelar && item.diasCongelado === undefined;
+
+    $congeladoSemPrazo.style.display = precisaDigitar ? 'block' : 'none';
+
+    if (naoRecomendado) {
+      $congeladoNaoRecomendado.style.display = 'block';
+      $congeladoNaoRecomendado.textContent = `⚠ Não recomendado congelar esse item: ${item.motivoNaoCongelar}. Escolha Refrigerado ou outro produto.`;
+    } else {
+      $congeladoNaoRecomendado.style.display = 'none';
+    }
+  }
+
+  function selecionar(indiceOuOutro) {
+    selecionado = indiceOuOutro;
+    conservacaoProduto = 'refrigerado';
+    $toggleBtns.forEach(b => b.classList.toggle('active', b.dataset.valor === 'refrigerado'));
+    $diasCongeladoManual.value = '';
+
+    if (indiceOuOutro === OUTRO_VALUE) {
+      $produtoSearch.value = '';
+      $camposManual.style.display = 'block';
+      $conservacaoProdutoWrap.style.display = 'none';
+    } else {
+      $produtoSearch.value = PRODUTOS[indiceOuOutro].nome;
+      $camposManual.style.display = 'none';
+      $conservacaoProdutoWrap.style.display = 'block';
+    }
+    atualizarVisibilidadeCongeladoManual();
+    fecharLista();
+    atualizar();
+  }
+
+  $toggleBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      conservacaoProduto = btn.dataset.valor;
+      $toggleBtns.forEach(b => b.classList.toggle('active', b === btn));
+      atualizarVisibilidadeCongeladoManual();
+      atualizar();
+    });
+  });
+
+  $diasCongeladoManual.addEventListener('input', atualizar);
+
+  function hoje() {
+    const d = new Date();
+    d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
+    return d.toISOString().slice(0, 10);
+  }
+
+  function formatarData(dateObj) {
+    const dd = String(dateObj.getDate()).padStart(2, '0');
+    const mm = String(dateObj.getMonth() + 1).padStart(2, '0');
+    const yyyy = dateObj.getFullYear();
+    return `${dd}/${mm}/${yyyy}`;
+  }
+
+  function getSelecao() {
+    const isOutro = selecionado === OUTRO_VALUE || selecionado === null;
+
+    if (isOutro) {
+      const nome = $produtoManual.value.trim() || 'Produto';
+      const dias = parseInt($diasManual.value, 10) || 0;
+      const conservacao = $conservacaoManual.value === 'congelado' ? 'Congelado (≤-18°C)' : 'Refrigerado (≤4°C)';
+      return { nome, dias, conservacao, bloqueado: false };
+    }
+
+    const item = PRODUTOS[selecionado];
+    const nome = item.nome;
+    let dias, conservacao;
+    const bloqueado = conservacaoProduto === 'congelado' && !!item.naoRecomendadoCongelar;
+    if (conservacaoProduto === 'congelado') {
+      dias = item.diasCongelado !== undefined ? item.diasCongelado : (parseInt($diasCongeladoManual.value, 10) || 0);
+      conservacao = 'Congelado (≤-18°C)';
+    } else {
+      dias = item.diasRefrigerado;
+      conservacao = 'Refrigerado (≤4°C)';
+    }
+    return { nome, dias, conservacao, bloqueado };
+  }
+
+  function atualizar() {
+    if (selecionado === null) {
+      $validadePreview.textContent = 'Validade: —';
+      renderPreview('', '', '', '', '', '', 0);
+      return;
+    }
+
+    const { nome, dias, conservacao, bloqueado } = getSelecao();
+
+    if (bloqueado) {
+      $validadePreview.textContent = 'Validade: —';
+      $previewWrap.innerHTML = '';
+      $btnImprimir.disabled = true;
+      return;
+    }
+
+    const dataStr = $dataManipulacao.value;
+    if (!dataStr) { $validadePreview.textContent = 'Validade: —'; renderPreview(nome, conservacao, '', '', '', '', 0); return; }
+
+    const [y, m, d] = dataStr.split('-').map(Number);
+    const dataManip = new Date(y, m - 1, d);
+    const dataValidade = new Date(dataManip);
+    dataValidade.setDate(dataValidade.getDate() + dias);
+
+    const manipFmt = formatarData(dataManip);
+    const validadeFmt = formatarData(dataValidade);
+
+    $validadePreview.textContent = `Validade: ${validadeFmt} (${dias} dia${dias === 1 ? '' : 's'} após manipulação — ${conservacao})`;
+
+    const qtd = Math.max(1, parseInt($quantidade.value, 10) || 1);
+    const lote = $lote.value.trim();
+    const responsavel = $responsavel.value.trim();
+    renderPreview(nome, conservacao, lote, manipFmt, validadeFmt, responsavel, qtd);
+  }
+
+  function renderPreview(nome, conservacao, lote, manipFmt, validadeFmt, responsavel, qtd) {
+    $previewWrap.innerHTML = '';
+    if (!manipFmt) { $btnImprimir.disabled = true; return; }
+    $btnImprimir.disabled = false;
+
+    for (let i = 0; i < qtd; i++) {
+      const label = document.createElement('div');
+      label.className = 'label';
+      label.innerHTML = `
+        <div class="campos">
+          <div class="campo produto">
+            <span class="rotulo">Produto:</span>
+            <span class="valor">${nome}</span>
+          </div>
+          <div class="campo conservacao">
+            <span class="rotulo">Conservação:</span>
+            <span class="valor">${conservacao}</span>
+          </div>
+          <div class="campo">
+            <span class="rotulo">Lote:</span>
+            <span class="valor">${lote || '&nbsp;'}</span>
+          </div>
+          <div class="campo">
+            <span class="rotulo">Manipulação:</span>
+            <span class="valor">${manipFmt}</span>
+          </div>
+          <div class="campo validade">
+            <span class="rotulo">Validade:</span>
+            <span class="valor">${validadeFmt}</span>
+          </div>
+          <div class="campo">
+            <span class="rotulo">Responsável:</span>
+            <span class="valor">${responsavel || '&nbsp;'}</span>
+          </div>
+        </div>
+      `;
+      $previewWrap.appendChild(label);
+    }
+  }
+
+  $produtoSearch.addEventListener('focus', abrirLista);
+  $produtoSearch.addEventListener('input', () => {
+    selecionado = null;
+    $camposManual.style.display = 'none';
+    abrirLista();
+  });
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.combo')) fecharLista();
+  });
+  $produtoManual.addEventListener('input', atualizar);
+  $diasManual.addEventListener('input', atualizar);
+  $conservacaoManual.addEventListener('change', atualizar);
+  $dataManipulacao.addEventListener('change', atualizar);
+  $quantidade.addEventListener('input', atualizar);
+  $lote.addEventListener('input', atualizar);
+  $responsavel.addEventListener('input', atualizar);
+  $btnImprimir.addEventListener('click', () => window.print());
+
+  $dataManipulacao.value = hoje();
+  renderComboList('');
+  atualizar();
+</script>
+
+</body>
+</html>
