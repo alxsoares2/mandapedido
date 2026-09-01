@@ -436,7 +436,16 @@
 
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <script>
+  // ======== SUPABASE (mesmo projeto usado pelo restante do mandapedido) ========
+  // Arquivo estático em public/, sem acesso às env vars do Next.js — por isso a
+  // URL e a anon key ficam hardcoded aqui (a anon key é segura para uso client-side,
+  // é a mesma usada em lib/supabase.ts e protegida por RLS no Supabase).
+  const SUPABASE_URL = 'https://uhtofxejnfysquttkhea.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVodG9meGVqbmZ5c3F1dHRraGVhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE0NjI0MzcsImV4cCI6MjA5NzAzODQzN30.RgO3RyblRrD0t9kROBI3TNqjj5nTcw8YXLLMHPvR1A0';
+  const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
   // ======== LISTA DE PRODUTOS E VALIDADES (em dias) — editável aqui ========
   const PRODUTOS = [
     // Carnes Cruas
@@ -812,7 +821,13 @@
     return { nome, dias, conservacao, bloqueado };
   }
 
+  // Guarda os dados da última etiqueta calculada, em formato ISO, pra gravar
+  // no Supabase no momento da impressão (sem precisar recalcular tudo de novo).
+  let estadoParaGravar = null;
+
   function atualizar() {
+    estadoParaGravar = null;
+
     if (selecionado === null) {
       $validadePreview.textContent = 'Validade: —';
       renderPreview('', '', '', '', '', '', 0);
@@ -845,6 +860,57 @@
     const lote = $lote.value.trim();
     const responsavel = $responsavel.value.trim();
     renderPreview(nome, conservacao, lote, manipFmt, validadeFmt, responsavel, qtd);
+
+    const categoria = (typeof selecionado === 'number') ? PRODUTOS[selecionado].categoria : null;
+    estadoParaGravar = {
+      produto: nome,
+      categoria,
+      conservacao,
+      lote: lote || null,
+      data_manipulacao: dataStr,
+      data_validade: isoDeData(dataValidade),
+      responsavel: responsavel || null,
+      qtd,
+    };
+  }
+
+  function isoDeData(dateObj) {
+    const yyyy = dateObj.getFullYear();
+    const mm = String(dateObj.getMonth() + 1).padStart(2, '0');
+    const dd = String(dateObj.getDate()).padStart(2, '0');
+    return `${yyyy}-${mm}-${dd}`;
+  }
+
+  function gerarCodigo() {
+    if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
+    return `etq-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
+  }
+
+  // Grava um registro por etiqueta impressa em etiquetas_impressas.
+  // peso, marca e unidade não são coletados no formulário ainda — gravados
+  // como null por enquanto. Nunca lança erro: só loga no console.
+  async function gravarEtiquetasImpressas() {
+    if (!estadoParaGravar) return;
+    const { produto, categoria, conservacao, lote, data_manipulacao, data_validade, responsavel, qtd } = estadoParaGravar;
+
+    const registros = Array.from({ length: qtd }, () => ({
+      produto,
+      categoria,
+      conservacao,
+      peso: null,
+      marca: null,
+      lote,
+      data_manipulacao,
+      data_validade,
+      responsavel,
+      unidade: null,
+      codigo: gerarCodigo(),
+    }));
+
+    const { error } = await supabaseClient.from('etiquetas_impressas').insert(registros);
+    if (error) {
+      console.error('Erro ao gravar etiquetas impressas no Supabase:', error);
+    }
   }
 
   function renderPreview(nome, conservacao, lote, manipFmt, validadeFmt, responsavel, qtd) {
@@ -903,7 +969,14 @@
   $quantidade.addEventListener('input', atualizar);
   $lote.addEventListener('input', atualizar);
   $responsavel.addEventListener('input', atualizar);
-  $btnImprimir.addEventListener('click', () => window.print());
+  $btnImprimir.addEventListener('click', () => {
+    // Não bloqueia a impressão: dispara a gravação e imprime na sequência,
+    // sem esperar a resposta do Supabase.
+    gravarEtiquetasImpressas().catch(err =>
+      console.error('Erro ao gravar etiquetas impressas no Supabase:', err)
+    );
+    window.print();
+  });
 
   $dataManipulacao.value = hoje();
   renderComboList('');

@@ -1,0 +1,8 @@
+{
+  "crons": [
+    {
+      "path": "/api/alerta-validade",
+      "schedule": "0 10 * * *"
+    }
+  ]
+}
