@@ -28,6 +28,8 @@ export async function GET() {
     return NextResponse.json({ success: true, enviado: false, motivo: 'nada vencendo' });
   }
 
+  // Envia pro grupo de WhatsApp de alertas operacionais (mesmo grupo usado
+  // pelo basilico-site via alertGroup.ts).
   const mensagem = montarMensagem(etiquetas);
   const enviado = await enviarAlertaWhatsapp(mensagem);
 
