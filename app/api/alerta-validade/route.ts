@@ -10,8 +10,8 @@ function montarMensagem(
     const vencida = validade.getTime() < Date.now();
     const validadeFmt = validade.toLocaleDateString('pt-BR');
     const marcador = vencida ? '🔴' : '🟡';
-    const unidade = etq.unidade ? ` (${etq.unidade})` : '';
-    return `${marcador} ${etq.produto}${unidade} — lote ${etq.lote || '—'} — validade ${validadeFmt}`;
+    const unidadeSufixo = etq.unidade ? ` — Unidade: ${etq.unidade}` : '';
+    return `${marcador} ${etq.produto} — Lote ${etq.lote || '—'} — Validade ${validadeFmt}${unidadeSufixo}`;
   });
 
   return (

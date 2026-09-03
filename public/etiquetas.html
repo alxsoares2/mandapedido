@@ -250,32 +250,62 @@
   }
 
   .label {
-    width: 300px;
-    height: 235px;
+    width: 320px;
+    height: 280px;
     background: #fff;
     border: 1px solid #999;
     box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-    padding: 14px 16px;
+    padding: 12px 14px;
     display: flex;
     flex-direction: column;
+  }
+
+  .label .cabecalho {
+    display: flex;
     justify-content: space-between;
+    align-items: baseline;
+    border-bottom: 2px solid var(--ink);
+    padding-bottom: 5px;
+    margin-bottom: 6px;
+  }
+
+  .label .cabecalho .nome-produto {
+    font-size: 17px;
+    font-weight: 800;
+    text-transform: uppercase;
+    line-height: 1.1;
+  }
+
+  .label .cabecalho .peso {
+    font-size: 14px;
+    font-weight: 700;
+    white-space: nowrap;
+    margin-left: 8px;
+  }
+
+  .label .conservacao-tag {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #706c62;
+    margin-bottom: 6px;
   }
 
   .label .campos {
     display: flex;
     flex-direction: column;
-    gap: 7px;
-    height: 100%;
-    justify-content: center;
+    gap: 3px;
+    flex: 1;
   }
 
   .label .campo {
     display: flex;
     align-items: baseline;
     gap: 8px;
-    font-size: 14px;
-    border-bottom: 1px solid #c9c5b9;
-    padding-bottom: 3px;
+    font-size: 12px;
+    border-bottom: 1px solid #e3e0d7;
+    padding-bottom: 2px;
   }
 
   .label .campo .rotulo {
@@ -283,24 +313,59 @@
     text-transform: uppercase;
     letter-spacing: 0.02em;
     white-space: nowrap;
-    font-size: 13px;
+    font-size: 10px;
+    color: #706c62;
+    width: 76px;
+    flex-shrink: 0;
   }
 
   .label .campo .valor {
-    font-size: 15px;
+    font-size: 12.5px;
     font-weight: 600;
     flex: 1;
-  }
-
-  .label .campo.produto .rotulo,
-  .label .campo.produto .valor {
-    font-size: 18px;
-    font-weight: 800;
   }
 
   .label .campo.validade .valor {
     color: var(--accent);
     font-weight: 800;
+  }
+
+  .label .rodape {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    border-top: 1px solid var(--ink);
+    margin-top: 6px;
+    padding-top: 6px;
+  }
+
+  .label .rodape .dados-unidade {
+    font-size: 9px;
+    line-height: 1.35;
+    color: #444;
+  }
+
+  .label .rodape .dados-unidade .nome-unidade {
+    font-weight: 800;
+    font-size: 10px;
+    color: var(--ink);
+  }
+
+  .label .rodape .qr-area {
+    text-align: center;
+    flex-shrink: 0;
+    margin-left: 8px;
+  }
+
+  .label .rodape .qr-area .qr-box {
+    width: 62px;
+    height: 62px;
+  }
+
+  .label .rodape .qr-area .codigo {
+    font-size: 9px;
+    font-weight: 700;
+    margin-top: 2px;
   }
 
   /* ---------- IMPRESSÃO ---------- */
@@ -319,16 +384,20 @@
       height: 70mm;
       border: none;
       box-shadow: none;
-      padding: 6mm 7mm;
+      padding: 5mm 6mm;
       page-break-after: always;
     }
 
-    .label .campos { gap: 3mm; }
-    .label .campo { font-size: 15px; padding-bottom: 3px; }
-    .label .campo .rotulo { font-size: 14px; }
-    .label .campo .valor { font-size: 16px; }
-    .label .campo.produto .rotulo,
-    .label .campo.produto .valor { font-size: 19px; }
+    .label .cabecalho .nome-produto { font-size: 21px; }
+    .label .cabecalho .peso { font-size: 16px; }
+    .label .conservacao-tag { font-size: 12px; }
+    .label .campo { font-size: 14px; }
+    .label .campo .rotulo { font-size: 11.5px; width: 84px; }
+    .label .campo .valor { font-size: 14.5px; }
+    .label .rodape .dados-unidade { font-size: 10.5px; }
+    .label .rodape .dados-unidade .nome-unidade { font-size: 11.5px; }
+    .label .rodape .qr-area .qr-box { width: 68px; height: 68px; }
+    .label .rodape .qr-area .codigo { font-size: 10px; }
     .label .campo.validade .valor {
       color: var(--ink);
       font-weight: 900;
@@ -341,6 +410,8 @@
     margin: 0;
   }
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 </head>
 <body>
 
@@ -403,27 +474,49 @@
         <input type="date" id="data-manipulacao">
       </div>
       <div class="field">
-        <label for="quantidade">Quantidade de etiquetas</label>
-        <input type="number" id="quantidade" min="1" value="1">
+        <label for="hora-manipulacao">Hora de manipulação</label>
+        <input type="time" id="hora-manipulacao">
       </div>
     </div>
 
     <div class="row">
       <div class="field">
+        <label for="quantidade">Quantidade de etiquetas</label>
+        <input type="number" id="quantidade" min="1" value="1">
+      </div>
+      <div class="field">
+        <label for="peso">Peso/Quantidade</label>
+        <input type="text" id="peso" placeholder="Ex: 800g, 1kg, 5un">
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="field">
+        <label for="marca">Marca/Fornecedor</label>
+        <input type="text" id="marca" placeholder="Ex: Swift, Sadia, produção própria">
+      </div>
+      <div class="field">
         <label for="lote">Lote</label>
         <input type="text" id="lote" placeholder="Ex: 0827-A">
       </div>
+    </div>
+
+    <div class="row">
       <div class="field">
         <label for="responsavel">Responsável</label>
         <input type="text" id="responsavel" placeholder="Nome de quem manipulou">
+      </div>
+      <div class="field">
+        <label for="unidade">Unidade/Restaurante</label>
+        <select id="unidade"></select>
       </div>
     </div>
 
     <div class="validade-preview" id="validade-preview">Validade: —</div>
 
     <p class="edit-list-note">
-      Quer mudar os produtos da lista ou o prazo de validade de cada um? Abra este arquivo em um editor de texto
-      e edite o array <code>PRODUTOS</code> no início do &lt;script&gt;, no final da página.
+      Quer mudar os produtos, prazos ou os dados das unidades (nome, CNPJ, endereço)? Abra este arquivo em um editor
+      de texto e edite os arrays <code>PRODUTOS</code> e <code>UNIDADES</code> no início do &lt;script&gt;.
     </p>
   </div>
 
@@ -436,7 +529,6 @@
 
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <script>
   // ======== SUPABASE (mesmo projeto usado pelo restante do mandapedido) ========
   // Arquivo estático em public/, sem acesso às env vars do Next.js — por isso a
@@ -656,6 +748,17 @@
   ];
   // ========================================================================
 
+  // ======== UNIDADES/MARCAS — editável aqui (nome, CNPJ, endereço) ========
+  const UNIDADES = [
+    { nome: "Basílico", cnpj: "00.000.000/0001-00", endereco: "Rua Exemplo, 100 — Sua Cidade/UF" },
+    { nome: "Vai de Pizza", cnpj: "00.000.000/0002-00", endereco: "Rua Exemplo, 200 — Sua Cidade/UF" },
+    { nome: "Casarão da Pizza", cnpj: "00.000.000/0003-00", endereco: "Rua Exemplo, 300 — Sua Cidade/UF" },
+    { nome: "Esfiha", cnpj: "00.000.000/0004-00", endereco: "Rua Exemplo, 400 — Sua Cidade/UF" },
+    { nome: "Mano Italiano", cnpj: "00.000.000/0005-00", endereco: "Rua Exemplo, 500 — Sua Cidade/UF" },
+  ];
+  // ========================================================================
+  // ⚠ Os CNPJs e endereços acima são placeholders — troque pelos dados reais antes de usar valendo.
+
   const $produtoSearch = document.getElementById('produto-search');
   const $comboList = document.getElementById('combo-list');
   const $conservacaoProdutoWrap = document.getElementById('conservacao-produto-wrap');
@@ -668,12 +771,25 @@
   const $diasManual = document.getElementById('dias-manual');
   const $conservacaoManual = document.getElementById('conservacao-manual');
   const $dataManipulacao = document.getElementById('data-manipulacao');
+  const $horaManipulacao = document.getElementById('hora-manipulacao');
   const $quantidade = document.getElementById('quantidade');
+  const $peso = document.getElementById('peso');
+  const $marca = document.getElementById('marca');
   const $lote = document.getElementById('lote');
   const $responsavel = document.getElementById('responsavel');
+  const $unidade = document.getElementById('unidade');
   const $validadePreview = document.getElementById('validade-preview');
   const $previewWrap = document.getElementById('preview-wrap');
   const $btnImprimir = document.getElementById('btn-imprimir');
+
+  function popularUnidades() {
+    UNIDADES.forEach((u, i) => {
+      const opt = document.createElement('option');
+      opt.value = i;
+      opt.textContent = u.nome;
+      $unidade.appendChild(opt);
+    });
+  }
 
   const OUTRO_VALUE = '__outro__';
   let selecionado = null; // index em PRODUTOS, ou OUTRO_VALUE, ou null (nada escolhido ainda)
@@ -790,11 +906,34 @@
     return d.toISOString().slice(0, 10);
   }
 
-  function formatarData(dateObj) {
+  function agoraHora() {
+    const d = new Date();
+    return String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
+  }
+
+  function formatarDataHora(dateObj) {
     const dd = String(dateObj.getDate()).padStart(2, '0');
     const mm = String(dateObj.getMonth() + 1).padStart(2, '0');
     const yyyy = dateObj.getFullYear();
-    return `${dd}/${mm}/${yyyy}`;
+    const hh = String(dateObj.getHours()).padStart(2, '0');
+    const min = String(dateObj.getMinutes()).padStart(2, '0');
+    return `${dd}/${mm}/${yyyy} ${hh}:${min}`;
+  }
+
+  function gerarCodigo(semente) {
+    let hash = 0;
+    for (let i = 0; i < semente.length; i++) {
+      hash = (hash * 31 + semente.charCodeAt(i)) >>> 0;
+    }
+    return hash.toString(36).toUpperCase().padStart(6, '0').slice(-6);
+  }
+
+  // Código único por etiqueta impressa, pra gravar em etiquetas_impressas —
+  // diferente do gerarCodigo(semente) acima, que é o hash determinístico
+  // mostrado no rótulo/QR (mesmo em todas as cópias de uma mesma impressão).
+  function gerarCodigoUnico() {
+    if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
+    return `etq-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
   }
 
   function getSelecao() {
@@ -821,8 +960,8 @@
     return { nome, dias, conservacao, bloqueado };
   }
 
-  // Guarda os dados da última etiqueta calculada, em formato ISO, pra gravar
-  // no Supabase no momento da impressão (sem precisar recalcular tudo de novo).
+  // Guarda os dados da última etiqueta calculada, pra gravar no Supabase no
+  // momento da impressão (sem precisar recalcular tudo de novo).
   let estadoParaGravar = null;
 
   function atualizar() {
@@ -830,7 +969,7 @@
 
     if (selecionado === null) {
       $validadePreview.textContent = 'Validade: —';
-      renderPreview('', '', '', '', '', '', 0);
+      renderPreview({}, 0);
       return;
     }
 
@@ -844,67 +983,64 @@
     }
 
     const dataStr = $dataManipulacao.value;
-    if (!dataStr) { $validadePreview.textContent = 'Validade: —'; renderPreview(nome, conservacao, '', '', '', '', 0); return; }
+    const horaStr = $horaManipulacao.value || '00:00';
+    if (!dataStr) { $validadePreview.textContent = 'Validade: —'; renderPreview({ nome, conservacao }, 0); return; }
 
     const [y, m, d] = dataStr.split('-').map(Number);
-    const dataManip = new Date(y, m - 1, d);
+    const [hh, mm] = horaStr.split(':').map(Number);
+    const dataManip = new Date(y, m - 1, d, hh, mm);
     const dataValidade = new Date(dataManip);
     dataValidade.setDate(dataValidade.getDate() + dias);
 
-    const manipFmt = formatarData(dataManip);
-    const validadeFmt = formatarData(dataValidade);
+    const manipFmt = formatarDataHora(dataManip);
+    const validadeFmt = formatarDataHora(dataValidade);
 
     $validadePreview.textContent = `Validade: ${validadeFmt} (${dias} dia${dias === 1 ? '' : 's'} após manipulação — ${conservacao})`;
 
     const qtd = Math.max(1, parseInt($quantidade.value, 10) || 1);
+    const peso = $peso.value.trim();
+    const marca = $marca.value.trim();
     const lote = $lote.value.trim();
     const responsavel = $responsavel.value.trim();
-    renderPreview(nome, conservacao, lote, manipFmt, validadeFmt, responsavel, qtd);
+    const unidade = UNIDADES[$unidade.value] || UNIDADES[0];
+    const codigo = gerarCodigo(`${nome}|${lote}|${manipFmt}|${responsavel}`);
+
+    renderPreview({ nome, conservacao, peso, marca, lote, manipFmt, validadeFmt, responsavel, unidade, codigo }, qtd);
 
     const categoria = (typeof selecionado === 'number') ? PRODUTOS[selecionado].categoria : null;
     estadoParaGravar = {
       produto: nome,
       categoria,
       conservacao,
+      peso: peso || null,
+      marca: marca || null,
       lote: lote || null,
-      data_manipulacao: dataStr,
-      data_validade: isoDeData(dataValidade),
+      data_manipulacao: dataManip.toISOString(),
+      data_validade: dataValidade.toISOString(),
       responsavel: responsavel || null,
+      unidade: unidade.nome,
       qtd,
     };
   }
 
-  function isoDeData(dateObj) {
-    const yyyy = dateObj.getFullYear();
-    const mm = String(dateObj.getMonth() + 1).padStart(2, '0');
-    const dd = String(dateObj.getDate()).padStart(2, '0');
-    return `${yyyy}-${mm}-${dd}`;
-  }
-
-  function gerarCodigo() {
-    if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
-    return `etq-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
-  }
-
-  // Grava um registro por etiqueta impressa em etiquetas_impressas.
-  // peso, marca e unidade não são coletados no formulário ainda — gravados
-  // como null por enquanto. Nunca lança erro: só loga no console.
+  // Grava um registro por etiqueta impressa em etiquetas_impressas. Nunca
+  // lança erro: só loga no console, pra nunca bloquear a impressão.
   async function gravarEtiquetasImpressas() {
     if (!estadoParaGravar) return;
-    const { produto, categoria, conservacao, lote, data_manipulacao, data_validade, responsavel, qtd } = estadoParaGravar;
+    const { produto, categoria, conservacao, peso, marca, lote, data_manipulacao, data_validade, responsavel, unidade, qtd } = estadoParaGravar;
 
     const registros = Array.from({ length: qtd }, () => ({
       produto,
       categoria,
       conservacao,
-      peso: null,
-      marca: null,
+      peso,
+      marca,
       lote,
       data_manipulacao,
       data_validade,
       responsavel,
-      unidade: null,
-      codigo: gerarCodigo(),
+      unidade,
+      codigo: gerarCodigoUnico(),
     }));
 
     const { error } = await supabaseClient.from('etiquetas_impressas').insert(registros);
@@ -913,23 +1049,27 @@
     }
   }
 
-  function renderPreview(nome, conservacao, lote, manipFmt, validadeFmt, responsavel, qtd) {
+  function renderPreview(dados, qtd) {
     $previewWrap.innerHTML = '';
-    if (!manipFmt) { $btnImprimir.disabled = true; return; }
+    if (!dados.manipFmt) { $btnImprimir.disabled = true; return; }
     $btnImprimir.disabled = false;
 
+    const { nome, conservacao, peso, marca, lote, manipFmt, validadeFmt, responsavel, unidade, codigo } = dados;
+
     for (let i = 0; i < qtd; i++) {
+      const qrId = `qr-${Date.now()}-${i}`;
       const label = document.createElement('div');
       label.className = 'label';
       label.innerHTML = `
+        <div class="cabecalho">
+          <div class="nome-produto">${nome}</div>
+          <div class="peso">${peso || ''}</div>
+        </div>
+        <div class="conservacao-tag">${conservacao}</div>
         <div class="campos">
-          <div class="campo produto">
-            <span class="rotulo">Produto:</span>
-            <span class="valor">${nome}</span>
-          </div>
-          <div class="campo conservacao">
-            <span class="rotulo">Conservação:</span>
-            <span class="valor">${conservacao}</span>
+          <div class="campo">
+            <span class="rotulo">Marca/Forn.:</span>
+            <span class="valor">${marca || '&nbsp;'}</span>
           </div>
           <div class="campo">
             <span class="rotulo">Lote:</span>
@@ -948,8 +1088,29 @@
             <span class="valor">${responsavel || '&nbsp;'}</span>
           </div>
         </div>
+        <div class="rodape">
+          <div class="dados-unidade">
+            <div class="nome-unidade">${unidade.nome}</div>
+            <div>CNPJ: ${unidade.cnpj}</div>
+            <div>${unidade.endereco}</div>
+          </div>
+          <div class="qr-area">
+            <div class="qr-box" id="${qrId}"></div>
+            <div class="codigo">#${codigo}</div>
+          </div>
+        </div>
       `;
       $previewWrap.appendChild(label);
+
+      if (typeof QRCode !== 'undefined') {
+        const qrTexto = `${nome} | ${peso || ''} | Lote:${lote} | Manip:${manipFmt} | Val:${validadeFmt} | Resp:${responsavel} | ${unidade.nome}`;
+        new QRCode(document.getElementById(qrId), {
+          text: qrTexto,
+          width: 62,
+          height: 62,
+          correctLevel: QRCode.CorrectLevel.M,
+        });
+      }
     }
   }
 
@@ -966,9 +1127,13 @@
   $diasManual.addEventListener('input', atualizar);
   $conservacaoManual.addEventListener('change', atualizar);
   $dataManipulacao.addEventListener('change', atualizar);
+  $horaManipulacao.addEventListener('change', atualizar);
   $quantidade.addEventListener('input', atualizar);
+  $peso.addEventListener('input', atualizar);
+  $marca.addEventListener('input', atualizar);
   $lote.addEventListener('input', atualizar);
   $responsavel.addEventListener('input', atualizar);
+  $unidade.addEventListener('change', atualizar);
   $btnImprimir.addEventListener('click', () => {
     // Não bloqueia a impressão: dispara a gravação e imprime na sequência,
     // sem esperar a resposta do Supabase.
@@ -978,7 +1143,9 @@
     window.print();
   });
 
+  popularUnidades();
   $dataManipulacao.value = hoje();
+  $horaManipulacao.value = agoraHora();
   renderComboList('');
   atualizar();
 </script>
