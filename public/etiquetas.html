@@ -276,19 +276,12 @@
     line-height: 1.1;
   }
 
-  .label .cabecalho .peso {
-    font-size: 14px;
-    font-weight: 700;
-    white-space: nowrap;
-    margin-left: 8px;
-  }
-
   .label .conservacao-tag {
     font-size: 10px;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.04em;
-    color: #706c62;
+    color: var(--ink);
     margin-bottom: 6px;
   }
 
@@ -314,8 +307,8 @@
     letter-spacing: 0.02em;
     white-space: nowrap;
     font-size: 10px;
-    color: #706c62;
-    width: 76px;
+    color: var(--ink);
+    width: 108px;
     flex-shrink: 0;
   }
 
@@ -328,44 +321,6 @@
   .label .campo.validade .valor {
     color: var(--accent);
     font-weight: 800;
-  }
-
-  .label .rodape {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    border-top: 1px solid var(--ink);
-    margin-top: 6px;
-    padding-top: 6px;
-  }
-
-  .label .rodape .dados-unidade {
-    font-size: 9px;
-    line-height: 1.35;
-    color: #444;
-  }
-
-  .label .rodape .dados-unidade .nome-unidade {
-    font-weight: 800;
-    font-size: 10px;
-    color: var(--ink);
-  }
-
-  .label .rodape .qr-area {
-    text-align: center;
-    flex-shrink: 0;
-    margin-left: 8px;
-  }
-
-  .label .rodape .qr-area .qr-box {
-    width: 62px;
-    height: 62px;
-  }
-
-  .label .rodape .qr-area .codigo {
-    font-size: 9px;
-    font-weight: 700;
-    margin-top: 2px;
   }
 
   /* ---------- IMPRESSÃO ---------- */
@@ -429,22 +384,16 @@
       margin-bottom: 3px;
     }
 
-    .label .cabecalho .nome-produto { font-size: 15px; line-height: 1.15; }
-    .label .cabecalho .peso { font-size: 12px; }
-    .label .conservacao-tag { font-size: 9px; margin-bottom: 3px; }
-    .label .campos { gap: 1px; }
-    .label .campo { font-size: 11px; padding-bottom: 0; }
-    .label .campo .rotulo { font-size: 9px; width: 62px; }
-    .label .campo .valor { font-size: 11px; }
-    .label .rodape { margin-top: 3px; padding-top: 3px; }
-    .label .rodape .dados-unidade { font-size: 8px; line-height: 1.25; }
-    .label .rodape .dados-unidade .nome-unidade { font-size: 9px; }
-    .label .rodape .qr-area .qr-box { width: 60px; height: 60px; }
-    .label .rodape .qr-area .codigo { font-size: 8px; }
+    .label .cabecalho .nome-produto { font-size: 22px; line-height: 1.15; }
+    .label .conservacao-tag { font-size: 12px; margin-bottom: 4px; }
+    .label .campos { gap: 3px; }
+    .label .campo { font-size: 15px; padding-bottom: 1px; }
+    .label .campo .rotulo { font-size: 12px; width: 95px; }
+    .label .campo .valor { font-size: 15px; }
     .label .campo.validade .valor {
       color: var(--ink);
       font-weight: 900;
-      text-decoration: underline;
+      /* sem sublinhado: gasta ribbon à toa numa impressora térmica */
     }
   }
 
@@ -453,7 +402,6 @@
     margin: 0;
   }
 </style>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 </head>
 <body>
@@ -1092,55 +1040,28 @@
     }
   }
 
-  // A lib qrcodejs escolhe sozinha a "versão" do QR pelo tamanho do texto,
-  // mas a estimativa dela (baseada em encodeURI) às vezes erra pra menos com
-  // acentos/caracteres especiais e o gerador real estoura a capacidade
-  // (erro "code length overflow"). Isso derrubava o atualizar() inteiro e
-  // sumia com a pré-visualização. Aqui a gente tenta gerar o QR com o texto
-  // completo e, se estourar mesmo assim, cai pra um texto mais curto (só o
-  // código da etiqueta) em vez de quebrar a tela.
-  function gerarQRCode(el, textoCompleto, codigoFallback) {
-    const tentativas = [textoCompleto, `Etiqueta #${codigoFallback}`];
-    for (let i = 0; i < tentativas.length; i++) {
-      try {
-        el.innerHTML = '';
-        new QRCode(el, {
-          text: tentativas[i],
-          width: 62,
-          height: 62,
-          // CorrectLevel.L (menor correção de erro, maior capacidade de dados)
-          // dá folga extra pra absorver esse erro de estimativa da lib.
-          correctLevel: QRCode.CorrectLevel.L,
-        });
-        return;
-      } catch (err) {
-        console.error('Falha ao gerar QR Code (tentativa ' + (i + 1) + '/' + tentativas.length + '):', err);
-      }
-    }
-    el.textContent = `#${codigoFallback}`;
-  }
-
   function renderPreview(dados, qtd) {
     $previewWrap.innerHTML = '';
     if (!dados.manipFmt) { $btnImprimir.disabled = true; return; }
     $btnImprimir.disabled = false;
 
-    const { nome, conservacao, peso, marca, lote, manipFmt, validadeFmt, responsavel, unidade, codigo } = dados;
+    const { nome, conservacao, peso, lote, manipFmt, validadeFmt, responsavel, unidade } = dados;
+    // Largura do contador (ex: qtd=50 -> "01".."50"; qtd=150 -> "001".."150")
+    // acompanha automaticamente a quantidade de dígitos do total.
+    const larguraContador = String(qtd).length;
 
     for (let i = 0; i < qtd; i++) {
-      const qrId = `qr-${Date.now()}-${i}`;
       const label = document.createElement('div');
       label.className = 'label';
       label.innerHTML = `
         <div class="cabecalho">
           <div class="nome-produto">${nome}</div>
-          <div class="peso">${peso || ''}</div>
         </div>
         <div class="conservacao-tag">${conservacao}</div>
         <div class="campos">
           <div class="campo">
-            <span class="rotulo">Marca/Forn.:</span>
-            <span class="valor">${marca || '&nbsp;'}</span>
+            <span class="rotulo">Tamanho/Qtd.:</span>
+            <span class="valor">${peso || '&nbsp;'}</span>
           </div>
           <div class="campo">
             <span class="rotulo">Lote:</span>
@@ -1154,29 +1075,22 @@
             <span class="rotulo">Validade:</span>
             <span class="valor">${validadeFmt}</span>
           </div>
+          ${qtd > 1 ? `
+          <div class="campo">
+            <span class="rotulo">Etiqueta:</span>
+            <span class="valor">${String(i + 1).padStart(larguraContador, '0')}/${qtd}</span>
+          </div>` : ''}
           <div class="campo">
             <span class="rotulo">Responsável:</span>
             <span class="valor">${responsavel || '&nbsp;'}</span>
           </div>
-        </div>
-        <div class="rodape">
-          <div class="dados-unidade">
-            <div class="nome-unidade">${unidade.nome}</div>
-            <div>CNPJ: ${unidade.cnpj}</div>
-            <div>${unidade.endereco}</div>
-          </div>
-          <div class="qr-area">
-            <div class="qr-box" id="${qrId}"></div>
-            <div class="codigo">#${codigo}</div>
+          <div class="campo">
+            <span class="rotulo">Loja:</span>
+            <span class="valor">${unidade.nome}</span>
           </div>
         </div>
       `;
       $previewWrap.appendChild(label);
-
-      if (typeof QRCode !== 'undefined') {
-        const qrTexto = `${nome} | ${peso || ''} | Lote:${lote} | Manip:${manipFmt} | Val:${validadeFmt} | Resp:${responsavel} | ${unidade.nome}`;
-        gerarQRCode(document.getElementById(qrId), qrTexto, codigo);
-      }
     }
   }
 
