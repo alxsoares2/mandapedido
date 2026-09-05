@@ -323,6 +323,12 @@
     font-weight: 800;
   }
 
+  /* Nome do responsável sempre em caixa alta na etiqueta, independente
+     de como foi digitado no formulário. */
+  .label .campo-responsavel .valor {
+    text-transform: uppercase;
+  }
+
   /* ---------- IMPRESSÃO ---------- */
   /* Cada .label precisa caber inteira dentro de 100mm x 70mm. Qualquer
      margem/padding "sobrando" em ancestrais (body, .app, .preview-wrap) ou
@@ -730,8 +736,12 @@
     { nome: "Basílico", cnpj: "00.000.000/0001-00", endereco: "Rua Exemplo, 100 — Sua Cidade/UF" },
     { nome: "Vai de Pizza", cnpj: "00.000.000/0002-00", endereco: "Rua Exemplo, 200 — Sua Cidade/UF" },
     { nome: "Casarão da Pizza", cnpj: "00.000.000/0003-00", endereco: "Rua Exemplo, 300 — Sua Cidade/UF" },
-    { nome: "Esfiha", cnpj: "00.000.000/0004-00", endereco: "Rua Exemplo, 400 — Sua Cidade/UF" },
+    { nome: "Esfiha Express", cnpj: "00.000.000/0004-00", endereco: "Rua Exemplo, 400 — Sua Cidade/UF" },
     { nome: "Mano Italiano", cnpj: "00.000.000/0005-00", endereco: "Rua Exemplo, 500 — Sua Cidade/UF" },
+    { nome: "Mano Cotidiano", cnpj: "00.000.000/0006-00", endereco: "Rua Exemplo, 600 — Sua Cidade/UF" },
+    { nome: "Umami Burguer", cnpj: "00.000.000/0007-00", endereco: "Rua Exemplo, 700 — Sua Cidade/UF" },
+    { nome: "Pizza Certa", cnpj: "00.000.000/0008-00", endereco: "Rua Exemplo, 800 — Sua Cidade/UF" },
+    { nome: "Okane Asiático", cnpj: "00.000.000/0009-00", endereco: "Rua Exemplo, 900 — Sua Cidade/UF" },
   ];
   // ========================================================================
   // ⚠ Os CNPJs e endereços acima são placeholders — troque pelos dados reais antes de usar valendo.
@@ -1066,7 +1076,7 @@
             <span class="rotulo">Etiqueta:</span>
             <span class="valor">${String(i + 1).padStart(larguraContador, '0')}/${qtd}</span>
           </div>` : ''}
-          <div class="campo">
+          <div class="campo campo-responsavel">
             <span class="rotulo">Responsável:</span>
             <span class="valor">${responsavel || '&nbsp;'}</span>
           </div>
