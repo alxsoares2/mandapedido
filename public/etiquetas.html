@@ -572,6 +572,7 @@
     { categoria: "Carnes e Proteínas Cozidas", nome: "Pernil assado", diasRefrigerado: 5, diasCongelado: 60 },
     { categoria: "Carnes e Proteínas Cozidas", nome: "Costela cozida", diasRefrigerado: 5, diasCongelado: 60 },
     { categoria: "Carnes e Proteínas Cozidas", nome: "Bacon frito", diasRefrigerado: 5, diasCongelado: 60 },
+    { categoria: "Carnes e Proteínas Cozidas", nome: "Carne moída preparada", diasRefrigerado: 5, diasCongelado: 60 },
 
     // Arroz, Feijão e Guarnições
     { categoria: "Arroz, Feijão e Guarnições", nome: "Arroz branco cozido", diasRefrigerado: 5, diasCongelado: 30 },
@@ -609,6 +610,9 @@
     { categoria: "Molhos e Bases", nome: "Vinagrete", diasRefrigerado: 3, naoRecomendadoCongelar: true, motivoNaoCongelar: "a emulsão separa e perde a textura ao descongelar" },
     { categoria: "Molhos e Bases", nome: "Maionese caseira", diasRefrigerado: 2, naoRecomendadoCongelar: true, motivoNaoCongelar: "a emulsão separa e perde a textura ao descongelar" },
     { categoria: "Molhos e Bases", nome: "Molho à base de maionese", diasRefrigerado: 2, naoRecomendadoCongelar: true, motivoNaoCongelar: "a emulsão separa e perde a textura ao descongelar" },
+    { categoria: "Molhos e Bases", nome: "Molho bolonhesa", diasRefrigerado: 5, diasCongelado: 30 },
+    { categoria: "Molhos e Bases", nome: "Molho pesto", diasRefrigerado: 3, diasCongelado: 30 },
+    { categoria: "Molhos e Bases", nome: "Azeite temperado", diasRefrigerado: 5, diasCongelado: 30 },
 
     // Queijos Fracionados e Ralados
     { categoria: "Queijos Fracionados e Ralados", nome: "Muçarela ralada", diasRefrigerado: 5, diasCongelado: 60 },
@@ -621,6 +625,7 @@
     { categoria: "Queijos Fracionados e Ralados", nome: "Queijo coalho fracionado", diasRefrigerado: 5, diasCongelado: 30 },
     { categoria: "Queijos Fracionados e Ralados", nome: "Mix de queijos ralados", diasRefrigerado: 5, diasCongelado: 60 },
     { categoria: "Queijos Fracionados e Ralados", nome: "Mix de Muçarela", diasRefrigerado: 5, diasCongelado: 60 },
+    { categoria: "Queijos Fracionados e Ralados", nome: "Burrata fracionada", diasRefrigerado: 2, diasCongelado: 30 },
 
     // Frios e Embutidos
     { categoria: "Frios e Embutidos", nome: "Presunto fatiado", diasRefrigerado: 5, diasCongelado: 30 },
@@ -631,6 +636,8 @@
     { categoria: "Frios e Embutidos", nome: "Linguiça aberta", diasRefrigerado: 5, diasCongelado: 30 },
     { categoria: "Frios e Embutidos", nome: "Bacon aberto", diasRefrigerado: 5, diasCongelado: 30 },
     { categoria: "Frios e Embutidos", nome: "Salsicha aberta", diasRefrigerado: 5, diasCongelado: 30 },
+    { categoria: "Frios e Embutidos", nome: "Bacon fatiado", diasRefrigerado: 5, diasCongelado: 30 },
+    { categoria: "Frios e Embutidos", nome: "Presunto parma fatiado", diasRefrigerado: 5, diasCongelado: 30 },
 
     // Hortaliças Higienizadas e Cortadas
     { categoria: "Hortaliças Higienizadas e Cortadas", nome: "Alface higienizada", diasRefrigerado: 3, naoRecomendadoCongelar: true, motivoNaoCongelar: "cristaliza a água e murcha completamente" },
@@ -650,57 +657,29 @@
     { categoria: "Hortaliças Higienizadas e Cortadas", nome: "Couve-flor higienizada", diasRefrigerado: 3, diasCongelado: 90 },
     { categoria: "Hortaliças Higienizadas e Cortadas", nome: "Batata descascada", diasRefrigerado: 2, diasCongelado: 90 },
     { categoria: "Hortaliças Higienizadas e Cortadas", nome: "Macaxeira descascada", diasRefrigerado: 2, diasCongelado: 90 },
-
-    // Pizzeria
-    { categoria: "Pizzeria", nome: "Massa de pizza", diasRefrigerado: 3, diasCongelado: 90 },
-    { categoria: "Pizzeria", nome: "Molho de pizza", diasRefrigerado: 5, diasCongelado: 30 },
-    { categoria: "Pizzeria", nome: "Frango desfiado", diasRefrigerado: 5, diasCongelado: 90 },
-    { categoria: "Pizzeria", nome: "Carne seca cozida", diasRefrigerado: 5, diasCongelado: 60 },
-    { categoria: "Pizzeria", nome: "Carne moída preparada", diasRefrigerado: 5, diasCongelado: 60 },
-    { categoria: "Pizzeria", nome: "Calabresa fatiada", diasRefrigerado: 5, diasCongelado: 30 },
-    { categoria: "Pizzeria", nome: "Presunto fatiado", diasRefrigerado: 5, diasCongelado: 30 },
-    { categoria: "Pizzeria", nome: "Bacon fatiado", diasRefrigerado: 5, diasCongelado: 30 },
-    { categoria: "Pizzeria", nome: "Bacon frito", diasRefrigerado: 5, diasCongelado: 60 },
-    { categoria: "Pizzeria", nome: "Cebola cortada", diasRefrigerado: 3, diasCongelado: 30 },
-    { categoria: "Pizzeria", nome: "Tomate cortado", diasRefrigerado: 3, naoRecomendadoCongelar: true, motivoNaoCongelar: "perde textura ou fica borrachudo ao descongelar" },
-    { categoria: "Pizzeria", nome: "Pimentão cortado", diasRefrigerado: 3, diasCongelado: 30 },
-    { categoria: "Pizzeria", nome: "Milho aberto", diasRefrigerado: 3, diasCongelado: 30 },
-    { categoria: "Pizzeria", nome: "Ervilha aberta", diasRefrigerado: 3, diasCongelado: 30 },
-    { categoria: "Pizzeria", nome: "Palmito aberto", diasRefrigerado: 3, diasCongelado: 30 },
-    { categoria: "Pizzeria", nome: "Azeitona aberta", diasRefrigerado: 5, diasCongelado: 30 },
-    { categoria: "Pizzeria", nome: "Requeijão aberto", diasRefrigerado: 5, diasCongelado: 30 },
-    { categoria: "Pizzeria", nome: "Parmesão ralado", diasRefrigerado: 5, diasCongelado: 60 },
-    { categoria: "Pizzeria", nome: "Muçarela ralada", diasRefrigerado: 5, diasCongelado: 60 },
     // ESTIMADOS por Claude — revisar prazo (baseado em itens parecidos da sua tabela):
-    { categoria: "Pizzeria", nome: "Cogumelos fatiados", diasRefrigerado: 3, diasCongelado: 30 },
-    { categoria: "Pizzeria", nome: "Azeitona preta fatiada", diasRefrigerado: 5, diasCongelado: 30 },
-    { categoria: "Pizzeria", nome: "Pimenta biquinho", diasRefrigerado: 5, diasCongelado: 30 },
-    { categoria: "Pizzeria", nome: "Catupiry aberto", diasRefrigerado: 5, diasCongelado: 30 },
-    { categoria: "Pizzeria", nome: "Cream cheese aberto", diasRefrigerado: 5, diasCongelado: 30 },
-    { categoria: "Pizzeria", nome: "Tomate seco", diasRefrigerado: 5, diasCongelado: 30 },
-    { categoria: "Pizzeria", nome: "Manjericão fresco", diasRefrigerado: 2, naoRecomendadoCongelar: true, motivoNaoCongelar: "perde textura ou fica borrachudo ao descongelar" },
-    { categoria: "Pizzeria", nome: "Rúcula higienizada (pizza)", diasRefrigerado: 3, naoRecomendadoCongelar: true, motivoNaoCongelar: "perde textura ou fica borrachudo ao descongelar" },
-    { categoria: "Pizzeria", nome: "Presunto parma fatiado", diasRefrigerado: 5, diasCongelado: 30 },
-    { categoria: "Pizzeria", nome: "Ovo de codorna cozido", diasRefrigerado: 3, naoRecomendadoCongelar: true, motivoNaoCongelar: "perde textura ou fica borrachudo ao descongelar" },
+    { categoria: "Hortaliças Higienizadas e Cortadas", nome: "Cogumelos fatiados", diasRefrigerado: 3, diasCongelado: 30 },
+    { categoria: "Hortaliças Higienizadas e Cortadas", nome: "Manjericão fresco", diasRefrigerado: 2, naoRecomendadoCongelar: true, motivoNaoCongelar: "perde textura ou fica borrachudo ao descongelar" },
 
-    // Italiano (Mano Italiano) — ESTIMADOS por Claude, revisar prazos
-    { categoria: "Italiano – Mano Italiano", nome: "Massa fresca (talharim/fettuccine)", diasRefrigerado: 2, diasCongelado: 30 },
-    { categoria: "Italiano – Mano Italiano", nome: "Nhoque fresco", diasRefrigerado: 2, diasCongelado: 30 },
-    { categoria: "Italiano – Mano Italiano", nome: "Ravioli fresco", diasRefrigerado: 2, diasCongelado: 30 },
-    { categoria: "Italiano – Mano Italiano", nome: "Massa seca cozida", diasRefrigerado: 5, diasCongelado: 30 },
-    { categoria: "Italiano – Mano Italiano", nome: "Molho bolonhesa", diasRefrigerado: 5, diasCongelado: 30 },
-    { categoria: "Italiano – Mano Italiano", nome: "Molho pesto", diasRefrigerado: 3, diasCongelado: 30 },
-    { categoria: "Italiano – Mano Italiano", nome: "Molho branco (Italiano)", diasRefrigerado: 3, diasCongelado: 30 },
-    { categoria: "Italiano – Mano Italiano", nome: "Risoto preparado", diasRefrigerado: 3, diasCongelado: 30 },
-    { categoria: "Italiano – Mano Italiano", nome: "Lasanha preparada (Italiano)", diasRefrigerado: 5, diasCongelado: 30 },
-    { categoria: "Italiano – Mano Italiano", nome: "Escalope preparado", diasRefrigerado: 3, diasCongelado: 30 },
-    { categoria: "Italiano – Mano Italiano", nome: "Carpaccio preparado", diasRefrigerado: 1, diasCongelado: 30 },
-    { categoria: "Italiano – Mano Italiano", nome: "Bruschetta preparada", diasRefrigerado: 2, diasCongelado: 30 },
-    { categoria: "Italiano – Mano Italiano", nome: "Antepasto preparado", diasRefrigerado: 3, diasCongelado: 30 },
-    { categoria: "Italiano – Mano Italiano", nome: "Salame italiano fatiado", diasRefrigerado: 5, diasCongelado: 30 },
-    { categoria: "Italiano – Mano Italiano", nome: "Presunto parma fatiado (Italiano)", diasRefrigerado: 5, diasCongelado: 30 },
-    { categoria: "Italiano – Mano Italiano", nome: "Burrata fracionada", diasRefrigerado: 2, diasCongelado: 30 },
-    { categoria: "Italiano – Mano Italiano", nome: "Azeite temperado", diasRefrigerado: 5, diasCongelado: 30 },
+    // Massas
+    { categoria: "Massas", nome: "Massa de pizza", diasRefrigerado: 3, diasCongelado: 90 },
+    { categoria: "Massas", nome: "Massa fresca (talharim/fettuccine)", diasRefrigerado: 2, diasCongelado: 30 },
+    { categoria: "Massas", nome: "Nhoque fresco", diasRefrigerado: 2, diasCongelado: 30 },
+    { categoria: "Massas", nome: "Ravioli fresco", diasRefrigerado: 2, diasCongelado: 30 },
+    { categoria: "Massas", nome: "Massa seca cozida", diasRefrigerado: 5, diasCongelado: 30 },
+
+    // Conservas e Itens Abertos
+    { categoria: "Conservas e Itens Abertos", nome: "Milho aberto", diasRefrigerado: 3, diasCongelado: 30 },
+    { categoria: "Conservas e Itens Abertos", nome: "Ervilha aberta", diasRefrigerado: 3, diasCongelado: 30 },
+    { categoria: "Conservas e Itens Abertos", nome: "Palmito aberto", diasRefrigerado: 3, diasCongelado: 30 },
+    { categoria: "Conservas e Itens Abertos", nome: "Azeitona aberta", diasRefrigerado: 5, diasCongelado: 30 },
+    { categoria: "Conservas e Itens Abertos", nome: "Requeijão aberto", diasRefrigerado: 5, diasCongelado: 30 },
+    // ESTIMADOS por Claude — revisar prazo (baseado em itens parecidos da sua tabela):
+    { categoria: "Conservas e Itens Abertos", nome: "Azeitona preta fatiada", diasRefrigerado: 5, diasCongelado: 30 },
+    { categoria: "Conservas e Itens Abertos", nome: "Pimenta biquinho", diasRefrigerado: 5, diasCongelado: 30 },
+    { categoria: "Conservas e Itens Abertos", nome: "Catupiry aberto", diasRefrigerado: 5, diasCongelado: 30 },
+    { categoria: "Conservas e Itens Abertos", nome: "Cream cheese aberto", diasRefrigerado: 5, diasCongelado: 30 },
+    { categoria: "Conservas e Itens Abertos", nome: "Tomate seco", diasRefrigerado: 5, diasCongelado: 30 },
 
     // Sobremesas
     { categoria: "Sobremesas", nome: "Brigadeiro", diasRefrigerado: 5, diasCongelado: 30 },
@@ -735,6 +714,13 @@
     { categoria: "Preparações Diversas", nome: "Recheio de carne", diasRefrigerado: 5, diasCongelado: 90 },
     { categoria: "Preparações Diversas", nome: "Recheio de queijo", diasRefrigerado: 5, diasCongelado: 90 },
     { categoria: "Preparações Diversas", nome: "Recheio de camarão", diasRefrigerado: 2, diasCongelado: 60 },
+    { categoria: "Preparações Diversas", nome: "Risoto preparado", diasRefrigerado: 3, diasCongelado: 30 },
+    { categoria: "Preparações Diversas", nome: "Escalope preparado", diasRefrigerado: 3, diasCongelado: 30 },
+    { categoria: "Preparações Diversas", nome: "Carpaccio preparado", diasRefrigerado: 1, diasCongelado: 30 },
+    { categoria: "Preparações Diversas", nome: "Bruschetta preparada", diasRefrigerado: 2, diasCongelado: 30 },
+    { categoria: "Preparações Diversas", nome: "Antepasto preparado", diasRefrigerado: 3, diasCongelado: 30 },
+    // ESTIMADO por Claude — revisar prazo:
+    { categoria: "Preparações Diversas", nome: "Ovo de codorna cozido", diasRefrigerado: 3, naoRecomendadoCongelar: true, motivoNaoCongelar: "perde textura ou fica borrachudo ao descongelar" },
 
   ];
   // ========================================================================
