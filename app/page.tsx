@@ -17,13 +17,13 @@ const BRANDS = [
     name: 'Basílico Pizzas',
     kind: 'Pizzaria artesanal',
     text: 'Pizzas artesanais, dos sabores clássicos aos especiais da casa.',
-    image: '/direto/basilico.webp',
+    image: '/institucional/basilico-card.webp',
   },
   {
     name: 'Mano Italiano',
     kind: 'Cozinha italiana',
     text: 'Massas, lasanhas e pratos italianos pra comer em casa como se estivesse à mesa.',
-    image: '/direto/mano-italiano.webp',
+    image: '/institucional/mano-card.webp',
   },
 ];
 
@@ -96,11 +96,11 @@ export default function Home() {
           <div className="mp-hero-art" aria-hidden="true">
             <figure className="mp-photo mp-photo-a mp-in" style={{ animationDelay: '200ms' }}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/direto/basilico.webp" alt="" />
+              <img src="/institucional/basilico-hero.webp" alt="" />
             </figure>
             <figure className="mp-photo mp-photo-b mp-in" style={{ animationDelay: '320ms' }}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/direto/mano-italiano.webp" alt="" />
+              <img src="/institucional/mano-hero.webp" alt="" />
             </figure>
             <div className="mp-badge mp-in" style={{ animationDelay: '460ms' }}>
               <strong>+7</strong>
@@ -130,6 +130,10 @@ export default function Home() {
           <Reveal className="mp-about-title">
             <p className="mp-eyebrow">Quem somos</p>
             <h2>Uma casa, várias cozinhas.</h2>
+            <figure className="mp-about-photo">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/institucional/basilico-mesa.webp" alt="Mesa posta com pizza e taças de vinho" loading="lazy" />
+            </figure>
           </Reveal>
           <Reveal className="mp-about-text" delay={100}>
             <p>
