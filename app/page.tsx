@@ -177,16 +177,16 @@ export default function Home() {
               </Reveal>
             ))}
 
-            <Reveal as="article" className="mp-brand mp-brand-soon" delay={BRANDS.length * 120}>
-              <div className="mp-soon-mark" aria-hidden="true">
-                <svg viewBox="0 0 24 24">
-                  <path d="M12 5v14M5 12h14" />
-                </svg>
+            <Reveal as="article" className="mp-brand" delay={BRANDS.length * 120}>
+              <div className="mp-brand-img mp-brand-logo">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src="/institucional/okane-card.webp" alt="Logo Okane — Culinária Oriental" loading="lazy" />
+                <span className="mp-soon-tag">Em breve</span>
               </div>
               <div className="mp-brand-body">
-                <span className="mp-brand-kind">Em breve</span>
-                <h3>Novas marcas</h3>
-                <p>Outras cozinhas do grupo vão chegar aqui em breve.</p>
+                <span className="mp-brand-kind">Culinária oriental</span>
+                <h3>Okane</h3>
+                <p>Culinária oriental autoral, chegando em breve ao grupo.</p>
               </div>
             </Reveal>
           </div>
