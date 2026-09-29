@@ -9,7 +9,7 @@ const body = Manrope({ subsets: ['latin'], weight: ['400', '500', '600', '700'],
 export const metadata: Metadata = {
   title: 'MandaPedido | Marcas de delivery em João Pessoa',
   description:
-    'O MandaPedido reúne marcas de restaurante de João Pessoa que operam há mais de 7 anos — como Basílico Pizzas e Mano Italiano.',
+    'O MandaPedido reúne marcas de restaurante de João Pessoa que operam há mais de 7 anos — como Basílico Pizzas, Mano Italiano e Umami Burger.',
 };
 
 const BRANDS = [
@@ -24,6 +24,12 @@ const BRANDS = [
     kind: 'Cozinha italiana',
     text: 'Massas, lasanhas e pratos italianos pra comer em casa como se estivesse à mesa.',
     image: '/institucional/mano-card.webp',
+  },
+  {
+    name: 'Umami Burger',
+    kind: 'Hamburgueria',
+    text: 'Hambúrgueres suculentos e muito sabor em cada mordida.',
+    image: '/institucional/umami-card.webp',
   },
 ];
 

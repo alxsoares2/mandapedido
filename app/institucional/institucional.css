@@ -202,7 +202,7 @@
 }
 
 /* Marcas (vitrine, sem link) */
-.mp-brands { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+.mp-brands { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
 .mp-brand {
   background: var(--mp-card);
   border-radius: 24px;
@@ -217,7 +217,7 @@
 .mp-brand:hover .mp-brand-img img { transform: scale(1.05); }
 .mp-brand-body { padding: 22px 24px 26px; }
 .mp-brand-kind { font-size: 12px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--mp-olive); }
-.mp-brand h3 { font-family: var(--mp-display), Georgia, serif; font-size: 28px; font-weight: 600; margin: 6px 0 8px; }
+.mp-brand h3 { font-family: var(--mp-display), Georgia, serif; font-size: 25px; font-weight: 600; margin: 6px 0 8px; }
 .mp-brand p { color: var(--mp-muted); margin: 0; font-size: 15px; }
 .mp-brand-soon { background: transparent; border: 2px dashed var(--mp-line); box-shadow: none; justify-content: center; }
 .mp-soon-mark {
