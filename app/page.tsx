@@ -1,117 +1,224 @@
-import Link from 'next/link';
-import { KioskTimer } from '@/components/KioskTimer';
+import type { Metadata } from 'next';
+import { Fraunces, Manrope } from 'next/font/google';
+import Reveal from './institucional/Reveal';
+import './institucional/institucional.css';
 
-const brands = [
+const display = Fraunces({ subsets: ['latin'], weight: ['500', '600', '700'], variable: '--mp-display' });
+const body = Manrope({ subsets: ['latin'], weight: ['400', '500', '600', '700'], variable: '--mp-body' });
+
+export const metadata: Metadata = {
+  title: 'MandaPedido | Marcas de delivery em João Pessoa',
+  description:
+    'O MandaPedido reúne marcas de restaurante de João Pessoa que operam há mais de 7 anos — como Basílico Pizzas e Mano Italiano.',
+};
+
+const BRANDS = [
   {
-    id: '1',
     name: 'Basílico Pizzas',
-    slug: 'basilico-pizzas',
-    bgColor: '#1B4332',
+    kind: 'Pizzaria artesanal',
+    text: 'Pizzas artesanais, dos sabores clássicos aos especiais da casa.',
+    image: '/direto/basilico.webp',
   },
   {
-    id: '2',
     name: 'Mano Italiano',
-    slug: 'mano-italiano',
-    bgColor: '#8B0000',
+    kind: 'Cozinha italiana',
+    text: 'Massas, lasanhas e pratos italianos pra comer em casa como se estivesse à mesa.',
+    image: '/direto/mano-italiano.webp',
+  },
+];
+
+const PILLARS = [
+  {
+    title: 'Experiência de verdade',
+    text: 'São mais de 7 anos operando cozinhas de delivery. Cada marca nasceu, cresceu e se ajustou ouvindo quem pede.',
+    icon: (
+      <path d="M12 3v3M12 18v3M4.2 7.5l2.6 1.5M17.2 15l2.6 1.5M4.2 16.5l2.6-1.5M17.2 9l2.6-1.5M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8Z" />
+    ),
   },
   {
-    id: '3',
-    name: 'Mano Cotidiano',
-    slug: 'mano-cotidiano',
-    bgColor: '#1B5E20',
+    title: 'Cada marca com sua identidade',
+    text: 'Cardápio, receita e jeito próprios. O que une as marcas é o padrão de operação por trás delas.',
+    icon: <path d="M4 5h7v7H4zM13 5h7v7h-7zM4 14h7v5H4zM13 14h7v5h-7z" />,
   },
   {
-    id: '4',
-    name: 'Pizza Certa',
-    slug: 'pizza-certa',
-    bgColor: '#E65100',
+    title: 'Padrão em cada pedido',
+    text: 'Processos, checklists e controle de qualidade pra que o pedido de hoje chegue tão bom quanto o de ontem.',
+    icon: <path d="M9 11l2.5 2.5L16 9M5 4h14v16H5z" />,
   },
   {
-    id: '5',
-    name: 'Okane',
-    slug: 'okane',
-    bgColor: '#8B6914',
-  },
-  {
-    id: '6',
-    name: 'Umami',
-    slug: 'umami',
-    bgColor: '#3D3D3D',
+    title: 'Direto com a gente',
+    text: 'Delivery próprio, sem intermediário: o cliente fala com quem faz a comida — e isso volta em preço e atendimento.',
+    icon: <path d="M4 12h12M12 6l6 6-6 6M20 5v14" />,
   },
 ];
 
 export default function Home() {
   return (
-    <main
-      className="min-h-screen"
-      style={{
-        background: 'linear-gradient(135deg, #F5F0E8 0%, #EDE8DC 100%)',
-      }}
-    >
-      {/* Header */}
-      <header className="pt-16 pb-12 px-8">
-        <h1
-          className="text-5xl md:text-6xl font-bold text-center tracking-tight"
-          style={{ color: '#1A1A1A' }}
-        >
-          O que você vai pedir hoje?
-        </h1>
+    <div className={`mp ${display.variable} ${body.variable}`}>
+      <div className="mp-ambient" aria-hidden="true" />
+
+      <header className="mp-nav">
+        <a href="#topo" className="mp-logo" aria-label="MandaPedido">
+          <span className="mp-logo-mark" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+              <path d="M4 18V7l4 5 4-5 4 5 4-5v11" />
+            </svg>
+          </span>
+          MandaPedido
+        </a>
+        <nav className="mp-nav-links">
+          <a href="#quem-somos">Quem somos</a>
+          <a href="#marcas">Marcas</a>
+          <a href="#como-trabalhamos">Como trabalhamos</a>
+        </nav>
       </header>
 
-      {/* Brand Grid */}
-      <section className="max-w-7xl mx-auto px-8 pb-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {brands.map((brand) => (
-            <Link
-              key={brand.id}
-              href={`/marca/${brand.slug}`}
-              className="group relative rounded-[20px] overflow-hidden transition-all duration-300 ease-out hover:scale-105 cursor-pointer"
-              style={{ minHeight: '260px' }}
-            >
-              {/* Background Color */}
-              <div
-                className="absolute inset-0"
-                style={{ backgroundColor: brand.bgColor }}
-              />
+      <main id="topo">
+        {/* Hero */}
+        <section className="mp-hero">
+          <div className="mp-hero-text">
+            <p className="mp-eyebrow mp-in" style={{ animationDelay: '60ms' }}>
+              Grupo de marcas de delivery · João Pessoa
+            </p>
+            <h1 className="mp-in" style={{ animationDelay: '140ms' }}>
+              Marcas que a cidade já conhece, <em>feitas com o mesmo cuidado</em>.
+            </h1>
+            <p className="mp-lead mp-in" style={{ animationDelay: '220ms' }}>
+              O MandaPedido é a casa de marcas de restaurante que operam há mais de 7 anos em João Pessoa.
+              Cada uma com sua cozinha, seu cardápio e seu jeito — todas com o mesmo compromisso com quem pede.
+            </p>
+            <div className="mp-hero-actions mp-in" style={{ animationDelay: '300ms' }}>
+              <a href="#marcas" className="mp-btn mp-btn-primary">Conheça as marcas</a>
+              <a href="#quem-somos" className="mp-btn">Quem somos</a>
+            </div>
+          </div>
 
-              {/* Overlay hover - suave darkening */}
-              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/15 transition-all duration-300" />
+          <div className="mp-hero-art" aria-hidden="true">
+            <figure className="mp-photo mp-photo-a mp-in" style={{ animationDelay: '200ms' }}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/direto/basilico.webp" alt="" />
+            </figure>
+            <figure className="mp-photo mp-photo-b mp-in" style={{ animationDelay: '320ms' }}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/direto/mano-italiano.webp" alt="" />
+            </figure>
+            <div className="mp-badge mp-in" style={{ animationDelay: '460ms' }}>
+              <strong>+7</strong>
+              <span>anos operando delivery</span>
+            </div>
+          </div>
+        </section>
 
-              {/* Sombra suave */}
-              <div className="absolute inset-0 shadow-lg group-hover:shadow-xl transition-shadow duration-300 rounded-[20px]" />
+        {/* Números */}
+        <Reveal as="section" className="mp-facts">
+          <div>
+            <strong>+7 anos</strong>
+            <span>de operação em delivery</span>
+          </div>
+          <div>
+            <strong>João Pessoa</strong>
+            <span>onde nascemos e entregamos</span>
+          </div>
+          <div>
+            <strong>Delivery próprio</strong>
+            <span>pedido direto com a gente</span>
+          </div>
+        </Reveal>
 
-              {/* Content Container */}
-              <div className="relative w-full h-full flex flex-col items-center justify-center p-8">
-                {/* Brand Name - elegante e grande */}
-                <h2
-                  className="text-3xl md:text-4xl font-bold text-white text-center leading-tight tracking-wide"
-                  style={{
-                    textShadow: '0 2px 8px rgba(0, 0, 0, 0.2)',
-                  }}
-                >
-                  {brand.name}
-                </h2>
+        {/* Quem somos */}
+        <section id="quem-somos" className="mp-section mp-about">
+          <Reveal className="mp-about-title">
+            <p className="mp-eyebrow">Quem somos</p>
+            <h2>Uma casa, várias cozinhas.</h2>
+          </Reveal>
+          <Reveal className="mp-about-text" delay={100}>
+            <p>
+              Tudo começa com uma ideia simples: comida boa, bem feita, chegando quente na casa de quem pediu.
+              Em mais de 7 anos, essa ideia virou receitas, marcas e uma operação inteira aprendida no dia a
+              dia do delivery.
+            </p>
+            <p>
+              O MandaPedido é o nome que reúne tudo isso. Por trás de cada marca existe a mesma equipe, os
+              mesmos processos e a mesma exigência — pra que você possa escolher o que comer hoje e confiar em
+              como vai chegar.
+            </p>
+          </Reveal>
+        </section>
 
-                {/* Subtle Click Indicator */}
-                <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                  <p className="text-sm text-white/80 font-medium">Toque para ver cardápio</p>
+        {/* Marcas */}
+        <section id="marcas" className="mp-section">
+          <Reveal className="mp-section-head">
+            <p className="mp-eyebrow">Nossas marcas</p>
+            <h2>Cada uma com sua personalidade.</h2>
+          </Reveal>
+
+          <div className="mp-brands">
+            {BRANDS.map((b, i) => (
+              <Reveal as="article" key={b.name} className="mp-brand" delay={i * 120}>
+                <div className="mp-brand-img">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={b.image} alt={`Prato da ${b.name}`} loading="lazy" />
                 </div>
+                <div className="mp-brand-body">
+                  <span className="mp-brand-kind">{b.kind}</span>
+                  <h3>{b.name}</h3>
+                  <p>{b.text}</p>
+                </div>
+              </Reveal>
+            ))}
+
+            <Reveal as="article" className="mp-brand mp-brand-soon" delay={BRANDS.length * 120}>
+              <div className="mp-soon-mark" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <path d="M12 5v14M5 12h14" />
+                </svg>
               </div>
+              <div className="mp-brand-body">
+                <span className="mp-brand-kind">Em breve</span>
+                <h3>Novas marcas</h3>
+                <p>Outras cozinhas do grupo vão chegar aqui em breve.</p>
+              </div>
+            </Reveal>
+          </div>
+        </section>
 
-              {/* Border Highlight on Hover */}
-              <div
-                className="absolute inset-0 rounded-[20px] border-2 border-white/0 group-hover:border-white/30 transition-all duration-300"
-                style={{
-                  boxShadow: '0 4px 16px rgba(0, 0, 0, 0.08)',
-                }}
-              />
-            </Link>
-          ))}
-        </div>
-      </section>
+        {/* Como trabalhamos */}
+        <section id="como-trabalhamos" className="mp-section">
+          <Reveal className="mp-section-head">
+            <p className="mp-eyebrow">Como trabalhamos</p>
+            <h2>O que está por trás de cada pedido.</h2>
+          </Reveal>
+          <div className="mp-pillars">
+            {PILLARS.map((p, i) => (
+              <Reveal key={p.title} className="mp-pillar" delay={i * 90}>
+                <span className="mp-pillar-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24">{p.icon}</svg>
+                </span>
+                <h3>{p.title}</h3>
+                <p>{p.text}</p>
+              </Reveal>
+            ))}
+          </div>
+        </section>
 
-      {/* Kiosk Timer */}
-      <KioskTimer />
-    </main>
+        {/* Fecho */}
+        <Reveal as="section" className="mp-closing">
+          <h2>Da nossa cozinha pra sua mesa.</h2>
+          <p>Há mais de 7 anos fazendo parte do dia a dia de João Pessoa.</p>
+        </Reveal>
+      </main>
+
+      <footer className="mp-footer">
+        <span className="mp-logo mp-logo-sm">
+          <span className="mp-logo-mark" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+              <path d="M4 18V7l4 5 4-5 4 5 4-5v11" />
+            </svg>
+          </span>
+          MandaPedido
+        </span>
+        <span>© {new Date().getFullYear()} MandaPedido · João Pessoa/PB</span>
+      </footer>
+    </div>
   );
 }
