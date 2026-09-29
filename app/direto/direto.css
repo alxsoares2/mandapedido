@@ -1,0 +1,218 @@
+/* Landing do panfleto (/direto) — tema claro próprio, independente do tema escuro do totem */
+.dp {
+  --dp-red: #b91c1c;
+  --dp-red-dark: #991b1b;
+  --dp-ink: #1c1917;
+  --dp-muted: #57534e;
+  --dp-bg: #faf8f5;
+  --dp-card: #ffffff;
+  --dp-pink: #fbecea;
+
+  min-height: 100vh;
+  width: 100%;
+  background:
+    radial-gradient(900px 500px at 50% -10%, #fdeceb 0%, transparent 60%),
+    var(--dp-bg);
+  color: var(--dp-ink);
+  font-family: var(--dp-sans), system-ui, sans-serif;
+  -webkit-user-select: auto;
+  user-select: auto;
+}
+
+.dp-wrap {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 48px 16px 40px;
+}
+
+/* Hero */
+.dp-hero { text-align: center; animation: dp-up .6s ease-out both; }
+.dp-title {
+  font-family: var(--dp-serif), Georgia, serif;
+  font-weight: 800;
+  color: var(--dp-red);
+  font-size: clamp(64px, 16vw, 148px);
+  line-height: .95;
+  letter-spacing: -.01em;
+  margin: 0;
+}
+.dp-subtitle {
+  font-family: var(--dp-serif), Georgia, serif;
+  font-weight: 700;
+  font-size: clamp(22px, 5vw, 44px);
+  line-height: 1.15;
+  margin: 10px 0 0;
+}
+.dp-rule {
+  display: block;
+  width: 96px;
+  height: 3px;
+  background: var(--dp-red);
+  border-radius: 2px;
+  margin: 22px auto;
+}
+.dp-rule-sm { width: 36px; height: 2px; margin: 10px auto; }
+.dp-lead { font-size: clamp(16px, 3.4vw, 26px); color: #292524; margin: 0; }
+
+/* Cupom */
+.dp-coupon-box {
+  margin: 36px auto 0;
+  background: var(--dp-pink);
+  border-radius: 20px;
+  padding: 24px 20px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 20px 40px;
+  animation: dp-up .6s .08s ease-out both;
+}
+.dp-off { text-align: center; }
+.dp-off strong {
+  display: block;
+  font-family: var(--dp-serif), Georgia, serif;
+  font-weight: 800;
+  color: var(--dp-red);
+  font-size: clamp(48px, 11vw, 88px);
+  line-height: 1;
+}
+.dp-off span {
+  font-family: var(--dp-serif), Georgia, serif;
+  font-weight: 700;
+  font-size: clamp(18px, 4vw, 30px);
+}
+.dp-coupon-side { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.dp-coupon-label {
+  font-weight: 700;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  font-size: 14px;
+}
+.dp-coupon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  background: var(--dp-red);
+  color: #fff;
+  border: 0;
+  border-radius: 999px;
+  padding: 12px 40px 10px;
+  cursor: pointer;
+  font: inherit;
+  box-shadow: 0 8px 20px -8px rgba(185, 28, 28, .6);
+  transition: transform .15s ease, background .15s ease;
+}
+.dp-coupon:hover { background: var(--dp-red-dark); transform: translateY(-1px); }
+.dp-coupon:active { transform: scale(.97); }
+.dp-coupon-code { font-weight: 700; letter-spacing: .12em; font-size: clamp(24px, 5vw, 32px); line-height: 1.1; }
+.dp-coupon-hint { font-size: 11px; opacity: .85; letter-spacing: .04em; }
+
+/* Lojas */
+.dp-choose {
+  text-align: center;
+  font-family: var(--dp-serif), Georgia, serif;
+  font-size: clamp(24px, 5vw, 34px);
+  margin: 48px 0 20px;
+}
+.dp-grid {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
+}
+.dp-grid > li { animation: dp-up .6s ease-out both; }
+.dp-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: var(--dp-card);
+  border-radius: 18px;
+  overflow: hidden;
+  text-decoration: none;
+  color: inherit;
+  box-shadow: 0 1px 2px rgba(0,0,0,.04), 0 10px 30px -12px rgba(28,25,23,.18);
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+.dp-card:hover, .dp-card:focus-visible {
+  transform: translateY(-4px);
+  box-shadow: 0 2px 4px rgba(0,0,0,.05), 0 20px 40px -14px rgba(185,28,28,.35);
+  outline: none;
+}
+.dp-card-img { aspect-ratio: 1 / 1; overflow: hidden; background: #e7e5e4; }
+.dp-card-img img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .5s ease; }
+.dp-card:hover .dp-card-img img { transform: scale(1.06); }
+.dp-card-body { padding: 18px 16px 20px; text-align: center; display: flex; flex-direction: column; flex: 1; }
+.dp-card-body h3 {
+  font-family: var(--dp-serif), Georgia, serif;
+  font-size: 26px;
+  line-height: 1.1;
+  margin: 0;
+}
+.dp-card-body p { color: var(--dp-muted); font-size: 15px; line-height: 1.4; margin: 0 0 16px; flex: 1; }
+.dp-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  align-self: center;
+  background: var(--dp-red);
+  color: #fff;
+  font-weight: 600;
+  font-size: 15px;
+  padding: 10px 20px;
+  border-radius: 999px;
+  transition: gap .2s ease, background .2s ease;
+}
+.dp-card:hover .dp-cta { background: var(--dp-red-dark); gap: 12px; }
+.dp-cta svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+
+/* Vantagens */
+.dp-perks {
+  list-style: none;
+  padding: 0;
+  margin: 48px 0 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+}
+.dp-perks li {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 6px 16px;
+  font-size: 16px;
+  color: #292524;
+}
+.dp-perks li + li { border-left: 1px solid #d6d3d1; }
+.dp-perks svg { width: 40px; height: 40px; flex: none; fill: none; stroke: var(--dp-red); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+
+.dp-foot { text-align: center; color: #a8a29e; font-size: 12px; margin-top: 40px; }
+
+@keyframes dp-up {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: none; }
+}
+
+@media (max-width: 860px) {
+  .dp-grid { grid-template-columns: repeat(2, 1fr); gap: 14px; }
+}
+
+@media (max-width: 560px) {
+  .dp-wrap { padding-top: 36px; }
+  .dp-card-body { padding: 14px 10px 16px; }
+  .dp-card-body h3 { font-size: 20px; }
+  .dp-card-body p { font-size: 13px; }
+  .dp-cta { font-size: 13px; padding: 8px 14px; }
+  .dp-perks { grid-template-columns: 1fr; gap: 14px; }
+  .dp-perks li { justify-content: flex-start; }
+  .dp-perks li + li { border-left: 0; }
+  .dp-perks svg { width: 32px; height: 32px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dp-hero, .dp-coupon-box, .dp-grid > li { animation: none; }
+  .dp-card, .dp-card-img img { transition: none; }
+}
